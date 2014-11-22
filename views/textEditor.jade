@@ -1,0 +1,42 @@
+extends layout
+
+block navBar
+  nav(class='navbar navbar-default', role='navigation')
+    .container-fluid
+      .navbar-header
+        button(class='navbar-toggle', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+          span.sronly
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a(class='navbar-brand', href='/#') CUDA Online Compiler
+      #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
+        ul(class='nav navbar-nav')
+          li
+            a(href='/compiler/textEditor') Editor Online
+          li
+            a(href='/compiler/about') About
+          li
+            a(href='/compiler/agradecimientos') Agradecimientos
+          li
+            a(href='/compiler/dessert') SIRIUS
+
+block pageTitle
+  h1 #{title}
+
+block textComponent
+  form
+    textarea(id= 'prueba', class='form-control', rows='25')
+    input(type= 'button', value='Save', class= 'btn btn-success', id= 'guardar', onclick= "guardarCodigo()")
+    input(type= 'button', value= 'Compilar', class= 'btn btn-default', id= 'compilar', onclick= "compilarCodigo()")
+    input(type= 'button', value= 'Ejecutar', class= 'btn btn-danger', id= 'ejecutar', onclick= "ejecutarCodigo()")
+    script.
+      var editor = CodeMirror.fromTextArea(document.getElementById('prueba'),{
+        lineNumbers: true,
+        matchBrackets: true,
+        indentUnit: 2,
+        smartIndent: true,
+        tabSize: 2,
+        mode: "text/x-csrc"
+      });

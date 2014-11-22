@@ -1,0 +1,39 @@
+extends layout
+
+block navBar
+  nav(class='navbar navbar-default', role='navigation')
+    .container-fluid
+      .navbar-header
+        button(class='navbar-toggle', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+          span.sronly
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a(class='navbar-brand', href='/#') Node Recipes
+      #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
+        ul(class='nav navbar-nav')
+          li
+            a(href='/recipes/bbq') BBQ
+          li
+            a(href='/recipes/brunch') Brunch
+          li
+            a(href='/recipes/dessert') Dessert
+
+
+block pageTitle
+  h1 #{recipes.kind}
+
+block pageContent
+  ul
+  each recipe in recipes.list
+    .well
+      h2 #{recipe.name}
+      img(src='#{recipe.photo}')
+      h3 Ingredients
+      h5
+        ul
+        each ingredient in recipe.ingredients
+          li=ingredient
+
+block textComponent
+  input(type='textarea',class='form-control', rows='5')
