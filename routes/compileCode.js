@@ -14,8 +14,15 @@ router.post('/', function(req, res) {
     }
     console.log('Compile STDOUT: '+stdout);
     console.log('Compile STDERR: '+stderr);
-  });
-  res.send('{"OK":true}');
+   var jsonMessage = {stderror: stderr,
+                      stdoutput: stdout
+                    };
+
+  console.log(jsonMessage);
+
+  res.send(JSON.stringify(jsonMessage));
 });
+
+ });
 
 module.exports = router;
