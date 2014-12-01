@@ -12,17 +12,17 @@ router.post('/', function(req, res) {
       console.log('Error code compile: '+error.code);
       console.log('Signal received compile: '+error.signal);
     }
+
     console.log('Compile STDOUT: '+stdout);
     console.log('Compile STDERR: '+stderr);
-   var jsonMessage = {stderror: stderr,
+    var jsonMessage = {stderror: stderr,
                       stdoutput: stdout
-                    };
+                      };
+   console.log(jsonMessage);
+   res.json(jsonMessage);
 
-  console.log(jsonMessage);
+  });
 
-  res.send(JSON.stringify(jsonMessage));
 });
-
- });
 
 module.exports = router;

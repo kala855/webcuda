@@ -31,6 +31,7 @@ block textComponent
     input(type= 'button', value='Save', class= 'btn btn-success', id= 'guardar', onclick= "guardarCodigo()")
     input(type= 'button', value= 'Compilar', class= 'btn btn-default', id= 'compilar', onclick= "compilarCodigo()")
     input(type= 'button', value= 'Ejecutar', class= 'btn btn-danger', id= 'ejecutar', onclick= "ejecutarCodigo()")
+    textarea(id= 'textAreaCompileError', class= 'form-control', rows='10')
     script.
       var editor = CodeMirror.fromTextArea(document.getElementById('prueba'),{
         lineNumbers: true,

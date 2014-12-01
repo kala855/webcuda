@@ -13,8 +13,10 @@ router.post('/', function(req, res) {
    }
    console.log('Run STDOUT: '+stdout);
    console.log('Run STDERR: '+stderr);
+   jsonMessage = {stdoutput : stdout,
+                  stderror: stderr};
+   res.json(jsonMessage);
   });
-  res.send('{"OK":true}');
 });
 
 module.exports = router;
