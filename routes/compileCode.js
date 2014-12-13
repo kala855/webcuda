@@ -6,7 +6,12 @@ var exec = require('child_process').exec;
 /* GET home page. */
 router.post('/', function(req, res) {
   var child;
-  child = exec("nvcc ./codes/cuda.cu -o ./codes/cuda", function (error, stdout, stderr) {
+  var path =  __dirname + "/../codes/";
+  var name = req.body.cname + ".cc";
+  console.log(req.body);
+  var comp = "g++ " + path + name + " -o ./codes/cuda";
+  console.log(comp);
+  child = exec(comp, function (error, stdout, stderr) {
     if (error) {
       console.log(error.stack);
       console.log('Error code compile: '+error.code);

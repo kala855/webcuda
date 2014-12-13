@@ -1,28 +1,5 @@
 extends layout
 
-
-block navBar
-  nav(class='navbar navbar-default', role='navigation')
-    .container-fluid
-      .navbar-header
-        button(class='navbar-toggle', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
-          span.sronly
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a(class='navbar-brand', href='/#') CUDA Online Compiler
-      #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
-        ul(class='nav navbar-nav')
-          li
-            a(href='/compiler/textEditor') Editor Online
-          li
-            a(href='/compiler/about') About
-          li
-            a(href='/compiler/agradecimientos') Agradecimientos
-          li
-            a(href='/compiler/dessert') SIRIUS
-
 block pageTitle
   .jumbotron
     h1 CUDA Online Compiler
