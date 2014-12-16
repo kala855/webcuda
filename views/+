@@ -46,7 +46,7 @@ html
             li
               a(href='http://sirius.utp.edu.co/sirius/',target="_blank") SIRIUS
             li
-              a(href='/users/signin') Sign in
+              a(href='/user/signin') Sign in
 
 
 

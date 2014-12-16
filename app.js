@@ -1,16 +1,61 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var express       = require('express'),
+    path          = require('path'),
+    favicon       = require('serve-favicon'),
+    logger        = require('morgan'),
+    cookieParser  = require('cookie-parser'),
+    bodyParser    = require('body-parser'),
+    passport      = require('passport'),
+    resourceful   = require('resourceful'),
+    LocalStrategy = require('passport-local').Strategy,
+    flash         = require('connect-flash');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var textEditor = require('./routes/textEditor');
-var saveCode = require('./routes/saveCode');
-var compileCode = require('./routes/compileCode');
-var runCode = require('./routes/runCode');
+var routes      = require('./routes/index'),
+    users       = require('./routes/users'),
+    textEditor  = require('./routes/textEditor'),
+    saveCode    = require('./routes/saveCode'),
+    compileCode = require('./routes/compileCode');
+//var runCode = require('./routes/runCode');
+
+var User = require('./models/user');
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.find({_id : id},function (err, user) {
+    if (err || user.length == 0)
+      done(err, null);
+    else
+      done(err, user[0]);
+  });
+});
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    process.nextTick(function () {
+      User.find( {username : username}, function(err, user) {
+        if (err) { return done(err); }
+        if (!user || user.length == 0) { return done(null, false, { message: 'Usuario desconocido : ' + username }); }
+        user = user[0];
+        bcrypt.compare(password, user.password, function (err, res) {
+          if (err)
+            return done(null, false, {message : 'Contraseña inválida.'}); // Dot is to differentiate it from other messages.
+
+          if (res == false)
+            return done(null, false, { message: 'Contraseña inválida' });
+
+          if (user.activated !== 'activated')
+            return done(null, false, {message: 'Su cuenta aún no ha sido activada'})
+          return done(null, user);
+        });
+      })
+    });
+  }
+));
+
+
+
+
 
 var app = express();
 
@@ -26,12 +71,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/compiler/textEditor', textEditor);
 app.use('/compiler/textEditor/saveCode', saveCode);
 app.use('/compiler/textEditor/compileCode', compileCode);
-app.use('/compiler/textEditor/runCode', runCode);
+//app.use('/user',users);
+//app.use('/compiler/textEditor/runCode', runCode);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

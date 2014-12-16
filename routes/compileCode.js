@@ -26,7 +26,7 @@ router.post('/', function(req, res) {
     }
     console.log('Compile STDOUT1: '+stdout);
     var child2 = exec("./codes/cuda", function (error, stdout, stderr) {
-      if (error1) {
+      if (error) {
         console.log(error.stack);
         console.log('Error code run:'+error.code);
         console.log('Signal received run: '+error.signal);

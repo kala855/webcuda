@@ -6,7 +6,7 @@ var exec = require('child_process').exec;
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('textEditor', {title: 'test'});
+  res.render('textEditor', {title: 'Unsaved'});
   res.send('{"OK":true}');
 });
 
