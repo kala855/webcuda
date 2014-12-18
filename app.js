@@ -2,6 +2,7 @@ var express       = require('express'),
     path          = require('path'),
     favicon       = require('serve-favicon'),
     logger        = require('morgan'),
+    env          = process.env.NODE_ENV || 'development',
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser'),
     passport      = require('passport'),
@@ -14,6 +15,7 @@ var routes      = require('./routes/index'),
     textEditor  = require('./routes/textEditor'),
     saveCode    = require('./routes/saveCode'),
     compileCode = require('./routes/compileCode');
+    config = require('./config/' + env);
 //var runCode = require('./routes/runCode');
 
 var User = require('./models/user');
@@ -71,6 +73,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -115,5 +118,6 @@ app.use(function(err, req, res, next) {
     });
 });
 
+resourceful.use('couchdb', config);
 
 module.exports = app;
