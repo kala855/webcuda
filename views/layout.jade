@@ -3,52 +3,71 @@
 doctype html
 html
   head
-    script(type= 'text/javascript', src='/javascripts/textEditor/saveCode.js')
-    script(type= 'text/javascript', src= '/javascripts/textEditor/compileCode.js')
-    script(type= 'text/javascript', src= '/javascripts/textEditor/runCode.js')
-    script(type= 'text/javascript', src='//code.jquery.com/jquery-1.11.0.min.js')
+    script(type= 'text/javascript', src='/js/textEditor/saveCode.js')
+    script(type= 'text/javascript', src='/js/textEditor/compileCode.js')
+    //script(type= 'text/javascript', src='//code.jquery.com/jquery-1.11.0.min.js')
 
-  title= title
-  //indicate that our site is mobile optimized
-  meta(name='viewport', content='width=device-width, initial-scale=1.0')
-  //reference our site-specific css
-  link(rel='stylesheet', href='/stylesheets/style.css')
-  link(rel='stylesheet', href='/javascripts/lib/codemirror-4.7/lib/codemirror.css')
-  script(src='/javascripts/lib/codemirror-4.7/lib/codemirror.js')
-  script(src='/javascripts/lib/codemirror-4.7/mode/clike/clike.js')
+    title= title
+    //indicate that our site is mobile optimized
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1')
+    //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
+    //on our web server and will be delivered faster to the client than our own server.
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', href='/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/css/codemirror.css')
 
-  //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
-  //on our web server and will be delivered faster to the client than our own server.
-  script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
-  script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
-  link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
-  link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
-  block navBar
-    //
-    nav(class='navbar navbar-default', role='navigation')
-      .container-fluid
-        .navbar-header
-          button(class='navbar-toggle', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
-            span.sronly
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a(class='navbar-brand', href='/#') CUDA Online Compiler
-        #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
-          ul(class='nav navbar-nav')
-            li
-              a(href='/compiler/textEditor') Editor Online
-            li
-              a(href='/compiler/about') About
-            li
-              a(href='/compiler/agradecimientos') Agradecimientos
-            li
-              a(href='http://sirius.utp.edu.co/sirius/',target="_blank") SIRIUS
-            li
-              a(href='/users/signin') Sign in
+    script(src='/js/codemirror/codemirror.min.js')
+    script(src='/js/codemirror/clike.min.js')
+    script(src='/js/jquery/jquery.min.js')
+    script(src='/js/bootstrap/bootstrap.min.js')
+    //script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+    //script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
+    //link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
+    //link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
 
+  body
+    block navBar
+      nav(class='navbar navbar-default', role='navigation')
+        .container-fluid
+          .navbar-header
+            button(class='navbar-toggle collapsed', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+              span.sronly
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a(class='navbar-brand', href='/#') CUDA Online Compilers
+          #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
+            ul(class='nav navbar-nav')
+              li
+                a(href='/compiler/textEditor') Editor Online
+              li
+                a(href='/compiler/about') About
+              li
+                a(href='/compiler/agradecimientos') Agradecimientos
+              li
+                a(href='http://sirius.utp.edu.co/sirius/', target='_blank') SIRIUS
+            ul(class='nav navbar-nav navbar-right')
+              li(class='dropdown')
+                a(href='#', class='dropdown-toggle', data-toggle='dropdown', role='buttom')
+                  i(class='glyphicon glyphicon-user')
+                  span No logueado
+                  i(class='caret')
+                ul(class='dropdown-menu', role='menu')
+                  li
+                    a(href='/users/signin') Sign in
+                  li
+                    a(href='/users/signup') Sign up
 
+    block alert
+      .container
+        - console.log(Object.getOwnPropertyNames(msg).length);
+        - if (typeof msg == 'object'&& Object.getOwnPropertyNames(msg).length > 0)
+          div(class='alert alert-info')
+            p #{a}
+            p #{msg}
 
     block pageTitle
       h1#cname #{title}

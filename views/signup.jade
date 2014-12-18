@@ -1,0 +1,35 @@
+extends layout
+
+block textComponent
+  h2 Nueva cuenta
+
+  form(action='/users/signup', method='post', class='form-horizontal')
+    .form-group
+      label(for='inputName', class='col-sm-2 control-label') Nombre completo:
+      .col-sm-7
+        input(type='text', name='name', class='form-control', id='inputName')
+
+    .form-group
+      label(for='inputCode', class='col-sm-2 control-label') Código :
+      .col-sm-7
+        input(type='text', name='code', class='form-control', id='inputCode')
+
+    .form-group
+      label(for='inputEmail', class='col-sm-2 control-label') Correo electrónico :
+      .col-sm-7
+        input(type='email', name='email', class='form-control', id='inputEmail', required='required')
+
+
+    .form-group
+      label(for='inputPassword', class='col-sm-2 control-label') Contraseña :
+      .col-sm-7
+        input(type='password', class='form-control', id='inputPassword', name='password')
+
+    .form-group
+      label(for='inputPassword2', class='col-sm-2 control-label') Confirmar contraseña :
+      .col-sm-7
+        input(type='password', class='form-control', id='inputPassword2', name='passwordConfirm')
+
+    button(type='submit', class='btn btn-primary', value='submit') Crear cuenta
+
+

@@ -1,21 +1,18 @@
 var express       = require('express'),
+    session       = require('express-session'),
     path          = require('path'),
     favicon       = require('serve-favicon'),
     logger        = require('morgan'),
-    env          = process.env.NODE_ENV || 'development',
+    env           = process.env.NODE_ENV || 'development',
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser'),
     passport      = require('passport'),
+    namespace    = require('express-namespace'),
     resourceful   = require('resourceful'),
     LocalStrategy = require('passport-local').Strategy,
     flash         = require('connect-flash');
 
-var routes      = require('./routes/index'),
-    users       = require('./routes/users'),
-    textEditor  = require('./routes/textEditor'),
-    saveCode    = require('./routes/saveCode'),
-    compileCode = require('./routes/compileCode');
-    config = require('./config/' + env);
+var config = require('./config/' + env);
 //var runCode = require('./routes/runCode');
 
 var User = require('./models/user');
@@ -55,10 +52,7 @@ passport.use(new LocalStrategy(
   }
 ));
 
-
-
-
-
+//express
 var app = express();
 
 // view engine setup
@@ -72,19 +66,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'CUDAtmp',
+  resave: false,
+  saveUninitialized: true
+}));
 
 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+require('./routes/index.js')(app, passport);
+//require('./routes/admin.js')(app, passport);
+require('./routes/users.js')(app, passport);
+require('./routes/textEditor.js')(app, passport);
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/compiler/textEditor', textEditor);
-app.use('/compiler/textEditor/saveCode', saveCode);
-app.use('/compiler/textEditor/compileCode', compileCode);
-//app.use('/user',users);
+//app.use('/compiler/textEditor', textEditor);
+//app.use('/compiler/textEditor/saveCode', saveCode);
+//app.use('/compiler/textEditor/compileCode', compileCode);
 //app.use('/compiler/textEditor/runCode', runCode);
 
 // catch 404 and forward to error handler

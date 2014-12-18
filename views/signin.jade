@@ -1,14 +1,14 @@
 extends layout
 
-block pageTitle
-  h1#cname Sign in
-
-//arreglar, averiguar como se hace un div
-
 block textComponent
-  .container
-  form.form-horizontal(role='form',action="/login", method="post",)
-  h2.form-signin-heading Iniciar sesión
-  input.form-control(type='number', placeholder='Código', required='', autofocus='')
-  input.form-control(type='password', placeholder='Password', required='')
-  button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+  form(action='/signin', method='post', role='form', class='form-horizontal')
+    .form-group
+      label(for='inputUser', class='col-sm-2 control-label') Username:
+      .col-sm-5
+        input(type='text', name='username', class='form-control', id='inputUser')
+    .form-group
+      label(for='inputPassword', class='col-sm-2 control-label') Password
+      .col-sm-5
+        input(type='password', class='form-control', id='inputPassword3', name='password')
+    .col-sm-5
+      button(type='submit', class='btn btn-primary') Login

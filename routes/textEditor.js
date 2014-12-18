@@ -1,13 +1,71 @@
-//var recipes = require('../data/recipeData.js');
-var express = require('express');
-var router = express.Router();
-var sys = require('sys');
-var exec = require('child_process').exec;
+var fs   = require('fs'),
+    sys  = require('sys'),
+    exec = require('child_process').exec;
 
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.render('textEditor', {title: 'Unsaved'});
-  res.send('{"OK":true}');
-});
 
-module.exports = router;
+
+module.exports = function(app,passport){
+  app.namespace('/compiler',function(){
+    app.get('/textEditor', function(req, res) {
+      if(!req.isAuthenticated()){
+        res.render('textEditor', {title: 'Unsaved'});
+        res.send('{"OK":true}');
+      }else
+        res.render('signin');
+    });
+
+
+    app.post('/saveCode', function(req, res) {
+      fs.writeFile('./codes/'+req.body.fileName+'.cc',req.body.source,function(err){
+        var response = {};
+        if(err){
+          console.log(err);
+          response.err=true;
+          response.msg='Error al guardar el archivo';
+        }else{
+          console.log('Archivo creado exitosamente');
+          response.err=false;
+          response.msg='Archivo creado exitosamente';
+        }
+        res.json(response);
+      });
+    });
+
+    app.post('/compileCode', function(req, res) {
+      var child;
+      var path =  __dirname + "/../codes/";
+      var name = req.body.cname + ".cc";
+      console.log(req.body);
+      var comp = "g++ " + path + name + " -o ./codes/cuda";
+      console.log(comp);
+      child = exec(comp, function (error, stdout, stderr) {
+        if (error) {
+          console.log(error.stack);
+          console.log('Error code compile: '+error.code);
+          console.log('Signal received compile: '+error.signal);
+          res.send("Error code: "+error.code+"\nSignal received run: "+error.signal);
+          return;
+        }
+        if(stderr) {
+          console.log('Compile STDERR1: '+stderr);
+          res.send(stderr);
+          return;
+        }
+        console.log('Compile STDOUT1: '+stdout);
+        var child2 = exec("./codes/cuda", function (error, stdout, stderr) {
+          if (error) {
+            console.log(error.stack);
+            console.log('Error code run:'+error.code);
+            console.log('Signal received run: '+error.signal);
+            res.send("Error code: "+error.code+"\nSignal received run: "+error.signal);
+          }
+          console.log('Run STDOUT: '+stdout);
+          console.log('Run STDERR: '+stderr);
+          res.send(stdout);
+        });
+
+      });
+    });
+  });
+}
