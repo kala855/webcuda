@@ -10,13 +10,12 @@ module.exports = function(app,passport){
     app.get('/textEditor', function(req, res) {
       if(!req.isAuthenticated()){
         res.render('textEditor', {title: 'Unsaved'});
-        res.send('{"OK":true}');
       }else
         res.render('signin');
     });
 
 
-    app.post('/saveCode', function(req, res) {
+    app.post('/textEditor/saveCode', function(req, res) {
       fs.writeFile('./codes/'+req.body.fileName+'.cc',req.body.source,function(err){
         var response = {};
         if(err){
@@ -31,8 +30,14 @@ module.exports = function(app,passport){
         res.json(response);
       });
     });
-
-    app.post('/compileCode', function(req, res) {
+    /*
+     *
+     * QUITAR EL TEXTEDITOR!! SE VE FEO
+     *
+     *
+     *
+     */
+    app.post('/textEditor/compileCode', function(req, res) {
       var child;
       var path =  __dirname + "/../codes/";
       var name = req.body.cname + ".cc";

@@ -5,10 +5,9 @@ function guardarCodigo(){
     name = prompt("Ingrese el nombre del archivo");
   }
   //name = $("input:text").val();
-  console.log(name);
   if(name.length > 0){
+    console.log(document.URL + "/saveCode");
     jQuery.post( document.URL+"/saveCode", {source: code, fileName : name},function (d, textStatus, jqXHR) {
-      console.log(d);
       document.getElementById("textAreaCompileError").value = d.msg;
       if(!d.err){
         $('#compilar').removeAttr('disabled');
