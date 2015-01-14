@@ -1,13 +1,14 @@
 var express       = require('express'),
     session       = require('express-session'),
     path          = require('path'),
+    engine        = require('ejs-locals'),
     favicon       = require('serve-favicon'),
     logger        = require('morgan'),
     env           = process.env.NODE_ENV || 'development',
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser'),
     passport      = require('passport'),
-    namespace    = require('express-namespace'),
+    namespace     = require('express-namespace'),
     resourceful   = require('resourceful'),
     LocalStrategy = require('passport-local').Strategy,
     flash         = require('connect-flash');
@@ -57,7 +58,8 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
+app.engine('html', engine);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -82,10 +84,6 @@ require('./routes/index.js')(app, passport);
 require('./routes/users.js')(app, passport);
 require('./routes/textEditor.js')(app, passport);
 
-//app.use('/compiler/textEditor', textEditor);
-//app.use('/compiler/textEditor/saveCode', saveCode);
-//app.use('/compiler/textEditor/compileCode', compileCode);
-//app.use('/compiler/textEditor/runCode', runCode);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -103,7 +101,8 @@ if (app.get('env') === 'development') {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
-            error: err
+            error: {},
+            user : req.user
         });
     });
 }
@@ -117,6 +116,8 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+
 
 resourceful.use('couchdb', config);
 
