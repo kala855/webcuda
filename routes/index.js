@@ -3,7 +3,9 @@
 module.exports = function(app,passport){
   app.get('/', function(req, res) {
     var msgh = req.flash() || req.flash('sucess');
-    res.render('index', { title: 'Express', msg: msgh });
+    console.log("mensaje:");
+    console.log(msgh);
+    res.render('index', { title: 'Express', message: msgh });
   });
   app.get('/about', function(req,res) {
     res.render('about',{});

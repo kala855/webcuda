@@ -8,6 +8,7 @@ var express       = require('express'),
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser'),
     passport      = require('passport'),
+    bcrypt       = require('bcrypt'),
     namespace     = require('express-namespace'),
     resourceful   = require('resourceful'),
     LocalStrategy = require('passport-local').Strategy,
@@ -34,8 +35,6 @@ passport.use(new LocalStrategy({
     usernameField: 'code'
   },
   function(username, password, done) {
-    console.log(username);
-    console.log(password);
     process.nextTick(function () {
       User.find( {code : username}, function(err, user) {
         if (err) { return done(err); }
