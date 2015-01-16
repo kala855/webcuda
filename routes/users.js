@@ -7,13 +7,31 @@ var User    = require('../models/user'),
 
 module.exports = function(app,passport){
   app.namespace('/users',function(){
-    app.get('/signin', function(req, res) {
-      res.render('signin');
-      res.send('respond with a resource');
+
+   app.get('/signin', function(req, res) {
+      if (!req.isAuthenticated()) {
+        var msg = req.flash('error');
+        if (msg.length == 0) msg = null;
+        res.render('signin', {user : req.user, message : msg});
+      }
+      else
+        res.render('resignin', {user : req.user});
     });
 
     app.get('/signup',function(req, res){
       res.render('signup');
+    });
+
+    app.post('/signin', passport.authenticate('local', {
+      successRedirect : '/users/aftersignin',
+      failureRedirect : '/users/signin',
+      successFlash : 'Bienvenido!',
+      failureFlash : true
+    }));
+
+    app.get('/aftersignin', function(req, res) {
+      req.flash('message', 'Bienvenido !');
+      res.redirect('/');
     });
 
     app.post('/signup', function(req, res) {
@@ -42,14 +60,12 @@ module.exports = function(app,passport){
                       user.password = hash;
 
                       crypto.randomBytes(20, function(err, buf) {
-                        user.activated = 'pending';
                         User.create(user, function(err, data) {
                           if (err)
                             return res.render('error', {ok : false , error : 'Hubo un error al registrar el usuario: ' + err.validate.errors[0].message});
                           else {
                             console.log('lo creo?');
-                            req.flash('message', 'Bienvenido ' + user.username +
-                                      '! Debe esperar a que el administrador autorice los roles solicitados');
+                            req.flash('message', 'Bienvenido ' + user.username + '!');
                             return res.redirect('/');
                           }
                         });

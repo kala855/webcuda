@@ -30,10 +30,14 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-passport.use(new LocalStrategy(
+passport.use(new LocalStrategy({
+    usernameField: 'code'
+  },
   function(username, password, done) {
+    console.log(username);
+    console.log(password);
     process.nextTick(function () {
-      User.find( {username : username}, function(err, user) {
+      User.find( {code : username}, function(err, user) {
         if (err) { return done(err); }
         if (!user || user.length == 0) { return done(null, false, { message: 'Usuario desconocido : ' + username }); }
         user = user[0];
@@ -43,9 +47,6 @@ passport.use(new LocalStrategy(
 
           if (res == false)
             return done(null, false, { message: 'Contraseña inválida' });
-
-          if (user.activated !== 'activated')
-            return done(null, false, {message: 'Su cuenta aún no ha sido activada'})
           return done(null, user);
         });
       })
@@ -57,9 +58,9 @@ passport.use(new LocalStrategy(
 var app = express();
 
 // view engine setup
+app.engine('html', engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
-app.engine('html', engine);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -99,9 +100,10 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
+        console.log(err);
         res.render('error', {
             message: err.message,
-            error: {},
+            error: err,
             user : req.user
         });
     });

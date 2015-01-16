@@ -1,14 +1,14 @@
 <% layout('layout') -%>
 
-<form action="/signin" method="post" role="form" class="form-horizontal">
+<form action="/users/signin" method="post" role="form" class="form-horizontal">
   <div class="form-group">
-    <label for="inputUser" class="col-sm-2 control-label">Username:</label>
+    <label for="inputUser" class="col-sm-2 control-label">Código:</label>
     <div class="col-sm-5">
-      <input type="text" name="username" id="inputUser" class="form-control"/>
+      <input type="text" name="code" id="inputUser" class="form-control"/>
     </div>
   </div>
   <div class="form-group">
-    <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+    <label for="inputPassword" class="col-sm-2 control-label">Contraseña:</label>
     <div class="col-sm-5">
       <input type="password" id="inputPassword3" name="password" class="form-control"/>
     </div>
