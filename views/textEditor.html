@@ -1,12 +1,12 @@
 <% layout('layout') -%>
 
 <form>
-  <textarea id="prueba" rows="25" class="form-control"></textarea>
+  <textarea id='prueba' rows='25' class='form-control'></textarea>
   <!--input(type= 'text', id= 'nombre')-->
-  <input type="button" value="Save" id="guardar" onclick="guardarCodigo()" class="btn btn-success"/>
-  <input type="button" value="Compilar y ejecutar" id="compilar" onclick="compilarCodigo()" disabled="disabled" class="btn btn-default"/>
-  <!--input(type= 'button', value= 'Ejecutar', class= 'btn btn-danger', id= 'ejecutar', onclick= "ejecutarCodigo()" disabled)-->
-  <textarea id="textAreaCompileError" rows="10" class="form-control"></textarea>
+  <input type='button' value='Save' id='guardar' onclick='guardarCodigo()' class='btn btn-success'/>
+  <input type='button' value='Compilar y ejecutar' id='compilar' onclick='compilarCodigo()' disabled='disabled' class='btn btn-default'/>
+  <!--input(type= 'button', value= 'Ejecutar', class= 'btn btn-danger', id= 'ejecutar', onclick= 'ejecutarCodigo()' disabled)-->
+  <textarea id='textAreaCompileError' rows='10' class='form-control'></textarea>
   <script>
     var editor = CodeMirror.fromTextArea(document.getElementById('prueba'),{
       lineNumbers: true,
@@ -14,7 +14,7 @@
       indentUnit: 2,
       smartIndent: true,
       tabSize: 2,
-      mode: "text/x-csrc"
+      mode: 'text/x-csrc'
     });
   </script>
 </form>

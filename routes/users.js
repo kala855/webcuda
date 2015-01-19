@@ -19,7 +19,7 @@ module.exports = function(app,passport){
     });
 
     app.get('/signup',function(req, res){
-      res.render('signup');
+      res.render('signup',{user : req.user});
     });
 
     app.post('/signin', passport.authenticate('local', {
@@ -32,6 +32,14 @@ module.exports = function(app,passport){
     app.get('/aftersignin', function(req, res) {
       req.flash('message', 'Bienvenido !');
       res.redirect('/');
+    });
+
+    app.get('/logout', function(req, res) {
+      req.logout();
+      var red = req.param('red');
+      if (red == undefined)
+        red = '/';
+      res.redirect(red);
     });
 
     app.post('/signup', function(req, res) {

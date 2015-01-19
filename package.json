@@ -1,6 +1,6 @@
 {
   "name": "CUDAwebcompiler",
-  "version": "0.0.2",
+  "version": "0.0.10",
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www"
