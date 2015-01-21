@@ -8,7 +8,9 @@ var fs   = require('fs'),
 module.exports = function(app,passport){
   app.namespace('/compiler',function(){
     app.get('/textEditor', function(req, res) {
-      if(req.isAuthenticated()){
+      // TMP mientras se prueba
+      
+      if(!req.isAuthenticated()){
         res.render('textEditor', {user : req.user, title: 'Unsaved'});
       }else
         res.render('signin');

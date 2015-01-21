@@ -19,6 +19,7 @@
     <script src='/js/codemirror/clike.min.js'></script>
     <script src='/js/jquery/jquery.min.js'></script>
     <script src='/js/bootstrap/bootstrap.min.js'></script>
+    <script src='/js/bootstrap/bootbox.min.js'></script>
     <% 
       function isEmpty(obj) {
         for(var i in obj) { return false; }
@@ -91,6 +92,10 @@
           <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
           <p><%= message %></p>
         </div-->
+      <% } %>
+      <% console.log(typeof title); %>
+      <% if( typeof title != 'undefined') { %>
+        <h2 id="cname"> <%=title%> </h2>
       <% } %>
 
       <%- body %>
