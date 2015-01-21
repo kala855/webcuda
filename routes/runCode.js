@@ -5,7 +5,7 @@ var exec = require('child_process').exec;
 
 router.post('/', function(req, res) {
   var child;
-  child = exec("/home/john/Documents/nodeSchool/simpleWebServer/testCUDASite/codes/cuda", function (error, stdout, stderr) {
+  child = exec("./codes/cuda", function (error, stdout, stderr) {
     if (error) {
      console.log(error.stack);
      console.log('Error code run:'+error.code);
