@@ -1,3 +1,5 @@
+var name="";
+
 postCallback = function (d, textStatus, jqXHR) {
   document.getElementById("textAreaCompileError").value = d.msg;
   if(!d.err){
@@ -9,7 +11,7 @@ postCallback = function (d, textStatus, jqXHR) {
 
 function guardarCodigo(){
   code = editor.getValue();
-  var name = $('#cname').text();
+  name = $('#cname').text();
   var saved = false;
   if(name == " Unsaved "){
     bootbox.prompt("Ingrese el nombre del archivo", function(result) {
