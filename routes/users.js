@@ -12,33 +12,33 @@ module.exports = function(app,passport){
       if (!req.isAuthenticated()) {
         var msg = req.flash('error');
         if (msg.length == 0) msg = null;
-        res.render('signin', {user : req.user, message : msg});
+        res.render('users/signin', {user : req.user, message : msg});
       }
       else
-        res.render('resignin', {user : req.user});
+        res.render('users/resignin', {user : req.user});
     });
 
     app.get('/signup',function(req, res){
-      res.render('signup',{user : req.user});
+      res.render('users/signup',{user : req.user});
     });
 
     app.post('/signin', passport.authenticate('local', {
-      successRedirect : '/users/aftersignin',
-      failureRedirect : '/users/signin',
+      successRedirect : 'aftersignin',
+      failureRedirect : 'signin',
       successFlash : 'Bienvenido!',
       failureFlash : true
     }));
 
     app.get('/aftersignin', function(req, res) {
       req.flash('message', 'Bienvenido !');
-      res.redirect('/');
+      res.redirect('../');
     });
 
     app.get('/logout', function(req, res) {
       req.logout();
       var red = req.param('red');
       if (red == undefined)
-        red = '/';
+        red = '../';
       res.redirect(red);
     });
 
@@ -55,11 +55,11 @@ module.exports = function(app,passport){
             if (ans.length == 0) {
                 if (user.password != user.passwordConfirm) {
                   req.flash('message', 'Las contraseñas no coinciden');
-                  return res.redirect('/signup');
+                  return res.redirect('users/signup');
                 } else {
                   if (user.password.length < 8) {
                     req.flash('message', 'La longitud de la contraseña debe ser mínimo de 8 caracteres');
-                    return res.redirect('/signup');
+                    return res.redirect('users/signup');
                   }
 
                   user.passwordConfirm = null;
@@ -83,12 +83,12 @@ module.exports = function(app,passport){
                 }
             } else {
               req.flash('message', 'El correo "' + user.email + '" ya está siendo usado!');
-              return res.redirect('/signup');
+              return res.redirect('users/signup');
             }
           });
         } else {
           req.flash('message', 'El estudiante con el codigo' + user.code + '" ya está registrado!');
-          return res.redirect('/signup');
+          return res.redirect('users/signup');
         }
       });
     });

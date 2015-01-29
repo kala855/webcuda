@@ -12,7 +12,7 @@ module.exports = function(app,passport){
       if(req.isAuthenticated()){
         res.render('textEditor', {user : req.user, title: 'Unsaved'});
       }else
-        res.render('signin');
+        res.render('/usr/signin');
     });
 
 

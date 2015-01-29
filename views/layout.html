@@ -12,7 +12,7 @@
     <!--on our web server and will be delivered faster to the client than our own server.-->
     <link rel='stylesheet' href='/css/bootstrap.min.css'>
     <!--link rel='stylesheet' href='/css/bootstrap-theme.min.css'-->
-    <link rel='stylesheet' href='/css/style.css'>
+    <!--link rel='stylesheet' href='/css/style.css'-->
     <link rel='stylesheet' href='/css/font-awesome.min.css'>
     <link rel='stylesheet' href='/css/codemirror.css'>
     <script src='/js/codemirror/codemirror.min.js'></script>
@@ -32,91 +32,92 @@
     <!--link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')-->
   </head>
   <body>
-    <nav role='navigation' class='navbar navbar-default'>
-    <div class='navbar-header'>
-      <button data-toggle='collapse' data-target='#navbar-collapse' class='navbar-toggle collapsed'>
-        <span class='sronly'></span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-      </button>
-      <a href='/#' class='navbar-brand'>CUDA Online Compilers</a>
-    </div>
-    <div id='navbar-collapse' class='collapse navbar-collapse'>
-      <ul class='nav navbar-nav'>
-        <li><a href='/compiler/textEditor'>Editor Online</a></li>
-        <li><a href='/about'>About</a></li>
-        <li><a href='/agradecimientos'>Agradecimientos</a></li>
-        <li><a href='http://sirius.utp.edu.co/sirius/' target='_blank'>SIRIUS</a></li>
-      </ul>
-
-      <!-- Dropdown de loggin -->
-      <ul class='nav navbar-nav navbar-right'>
-
-        <% if (typeof user == 'object' && user) { %>
-        <li> <a href="/bugs"> Bugs </a></li>
-        <% } %>
-
-
-        <!-- Admin party -->
-        <% if (typeof user == 'object' && user && user.isAdmin('admin', function(ans) { %>
-          <% if (ans) { %>
-          <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin <i class="glyphicon glyphicon-chevron-down"></i></a>
-          <ul class="dropdown-menu">
-            <li> <a href="/admin"><i class="glyphicon glyphicon-user"></i> Usuarios </a></li>
-            <li> <a href="/admin/bugs"><i class="glyphicon glyphicon-comment"></i> Bugs </a></li>
+    <div class='container'>
+      <nav role='navigation' class='navbar navbar-inverse'>
+      <div class='container-fluid'>
+        <div class='navbar-header'>
+          <button data-toggle='collapse' data-target='#navbar-collapse' class='navbar-toggle collapsed'>
+            <span class='sronly'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+          </button>
+          <a href='/#' class='navbar-brand'>CUDA Online Compilers</a>
+        </div>
+        <div id='navbar-collapse' class='collapse navbar-collapse'>
+          <ul class='nav navbar-nav'>
+            <li><a href='/compiler/textEditor'>Editor Online</a></li>
+            <li><a href='/about'>About</a></li>
+            <li><a href='/agradecimientos'>Agradecimientos</a></li>
+            <li><a href='http://sirius.utp.edu.co/sirius/' target='_blank'>SIRIUS</a></li>
           </ul>
-          </li>
-          <% } %>
-        <% }))%>
-        <!-- end of the party -->
 
+          <!-- Dropdown de loggin -->
+          <ul class='nav navbar-nav navbar-right'>
 
-        <li class='dropdown'>
-        <% if (typeof user == 'object' && user) { %>
-        <a href='#' class='dropdown-toggle' data-toggle='dropdown'>
-          <i class='glyphicon glyphicon-user'></i>
-          <%= user.name %>
-          <i class='glyphicon glyphicon-chevron-down'></i>
-        </a>
-        <ul class='dropdown-menu'>
-          <!--li><a href='/users/profile'><i class='glyphicon glyphicon-user'></i> Profile</a></li-->
-          <li><a href='/users/logout'> <i class='glyphicon glyphicon-off'></i> Logout</a></li>
-          <% } else { %>
-          <a href='#' class='dropdown-toggle' data-toggle='dropdown'>
-            <i class='glyphicon glyphicon-user'></i> 
-            No logueado 
-            <i class='glyphicon glyphicon-chevron-down'></i>
-          </a>
-          <ul class='dropdown-menu'>
-            <li><a href='/users/signin'>Login</a></li>
-            <li class='divider'></li>
-            <li><a href='/users/signup'>Signup</a></li>
+            <% if (typeof user == 'object' && user) { %>
+            <li> <a href="/bugs"> Bugs </a></li>
             <% } %>
-          </ul>
-          </li>
-        </ul>
 
+
+            <!-- Admin party -->
+            <% if (typeof user == 'object' && user && user.isAdmin(function(ans) { %>
+            <% if (ans) { %>
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Admin <i class="glyphicon glyphicon-chevron-down"></i></a>
+            <ul class="dropdown-menu">
+              <li> <a href="/admin"><i class="glyphicon glyphicon-user"></i> Usuarios </a></li>
+              <li> <a href="/admin/bugs"><i class="glyphicon glyphicon-comment"></i> Bugs </a></li>
+            </ul>
+            </li>
+            <% } %>
+            <% }))%>
+            <!-- end of the party -->
+
+
+            <li class='dropdown'>
+            <% if (typeof user == 'object' && user) { %>
+            <a href='#' class='dropdown-toggle' data-toggle='dropdown'>
+              <i class='glyphicon glyphicon-user'></i>
+              <%= user.name %>
+              <i class='glyphicon glyphicon-chevron-down'></i>
+            </a>
+            <ul class='dropdown-menu'>
+              <!--li><a href='/users/profile'><i class='glyphicon glyphicon-user'></i> Profile</a></li-->
+              <li><a href='/users/logout'> <i class='glyphicon glyphicon-off'></i> Logout</a></li>
+              <% } else { %>
+              <a href='#' class='dropdown-toggle' data-toggle='dropdown'>
+                <i class='glyphicon glyphicon-user'></i> 
+                No logueado 
+                <i class='glyphicon glyphicon-chevron-down'></i>
+              </a>
+              <ul class='dropdown-menu'>
+                <li><a href='/users/signin'>Login</a></li>
+                <li class='divider'></li>
+                <li><a href='/users/signup'>Signup</a></li>
+                <% } %>
+              </ul>
+              </li>
+            </ul>
+
+          </div>
+          </nav>
+        </div>
+
+        <div class='container'>
+          <% if (typeof message == 'object' && !isEmpty(message)) { %>
+          <!--div class='alert alert-info alert-dismissable'>
+          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+          <p><%= message %></p>
+          </div-->
+          <% } %>
+          <% if( typeof title != 'undefined') { %>
+          <h2 id="cname"> <%=title%> </h2>
+          <% } %>
+
+          <%- body %>
+        </div>
       </div>
-      </nav>
-
-
-      <div class='container'>
-        <% if (typeof message == 'object' && !isEmpty(message)) { %>
-        <!--div class='alert alert-info alert-dismissable'>
-        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-        <p><%= message %></p>
-        </div-->
-        <% } %>
-        <% console.log(typeof title); %>
-        <% if( typeof title != 'undefined') { %>
-        <h2 id="cname"> <%=title%> </h2>
-        <% } %>
-
-        <%- body %>
-      </div>
-
     </body>
   </html>

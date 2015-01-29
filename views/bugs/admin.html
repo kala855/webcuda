@@ -1,0 +1,37 @@
+<% layout('../layout') -%>
+
+
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h1 class="panel-title">Administración de PQR's</h1>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th> Usuario que reporta </th>
+          <th> Tipo </th>
+          <th> Fecha de modificación </th>
+          <th> Descripción </th>
+          <th> Adicionar comentario </th>
+          <th> Marcar como resuelto </th>
+        </tr>
+
+      </thead>
+      <% data.forEach(function(pqr){ %>
+        <tr>
+          <td> <%= pqr.reporter %>  </td>
+          <td> <%= pqr.type %>  </td>
+          <td> <%= new Date(pqr.mtime) %> </td>
+          <td> <%= pqr.desc %> </td>
+          <td> <textarea name="pqrNotes" class="form-control" placeholder="Solución"></textarea> </td>
+          <td> <button type="button" class="btn btn-info" <%= 'onclick=resolve("' + pqr._id + '")'%> > Resolver </button> </td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+
+<a href="/pqr/all" class="btn btn-info"> Ver los PQR resueltos </a>
+
+<script type="text/javascript" src="/js/pqr/admin.js"></script>

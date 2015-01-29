@@ -1,0 +1,31 @@
+<% layout('../layout') -%>
+
+
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h1 class="panel-title">Listado de PQR's</h1>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th> Usuario que reporta </th>
+          <th> Tipo </th>
+          <th> Fecha de modificación </th>
+          <th> Descripción </th>
+          <th> Comentario </th>
+        </tr>
+
+      </thead>
+      <% data.forEach(function(pqr){ %>
+        <tr>
+          <td> <%= pqr.reporter %>  </td>
+          <td> <%= pqr.type %>  </td>
+          <td> <%= new Date(pqr.mtime) %> </td>
+          <td> <%= pqr.desc %> </td>
+          <td> <%= pqr.notes %> </td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>

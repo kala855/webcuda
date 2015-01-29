@@ -14,8 +14,4 @@ module.exports = function(app,passport){
     res.render('agradecimientos',{user : req.user });
   });
 
-  app.get('/bugs',function(req,res){
-    res.render('bugs', {user : req.user, title : "Bugs"});
-  });
-
 }

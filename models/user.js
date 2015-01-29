@@ -15,7 +15,7 @@ var User = module.exports = resourceful.define('user', function () {
     return this.activated;
   }
 
-  this.prototype.isAdmin = function() {
+  this.prototype.isAdmin = function(callback) {
     if(this.role === 'Admin'){
       return callback(true);
     }
