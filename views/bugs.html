@@ -1,0 +1,33 @@
+<% layout('layout') -%>
+
+<form action='/bugs/submit' method='post' id='bugsForm' class='form-horizontal'>
+
+  <div class='col-sm-6'>
+    <div class='form-group'>
+      <label for='bugType'> Tipo </label>
+      <select class='form-control' name='type' id='bugType'>
+        <option value='bug'> Bug </option>
+        <option value='rec'> Recomendación </option>
+      </select>
+    </div>
+  </div>
+
+  <div class='col-sm-12'>
+    <div class='form-group'>
+      <label for='bugDesc'> Descripción </label>
+      <textarea name='desc' id='bugDesc' class='form-control' required></textarea>
+    </div>
+  </div>
+
+  <div class='col-sm-12'>
+    <div class='form-group'>
+      <label for='bugNotes'> Notas </label>
+      <textarea name='notes' id='bugNotes' class='form-control'></textarea>
+    </div>
+  </div>
+
+  <div class='col-sm-5'>
+    <button type='submit' class='btn btn-primary'> Reportar </button>
+  </div>
+</form>
+

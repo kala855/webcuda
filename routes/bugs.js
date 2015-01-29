@@ -1,17 +1,16 @@
 var utils = require('./utils'),
-    bugs   = require('../models/bugs');
+    Bugs   = require('../models/bug');
 
 module.exports = function(app, passport) {
   app.namespace('/bugs', function(){
     app.get('/', utils.isLoggedIn, function(req, res) {
-      res.render('bugs/bugs', {user : req.user});
+      res.render('bugs', {user : req.user});
     });
 
     app.post('/submit', utils.isLoggedIn, function(req, res) {
-
-      var bugs = req.param('bugs');
+      var bugs = req.body;
       bugs.reporter = req.user.username;
-      bugs.create(bugs, function (err, ans) {
+      Bugs.create(bugs, function (err, ans) {
         if (err)
           return res.render('error.html', {ok : false, error : err});
         req.flash('message' , 'bugs fue registrado exitosamente');
@@ -20,7 +19,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/all', utils.isAdmin, function (req, res) {
-      bugs.all(function(err, data) {
+      Bugs.all(function(err, data) {
         if (err) {
           req.flash('message', 'Ocurrió un error al consultar la base de datos');
           return res.redirect('/');
@@ -30,7 +29,7 @@ module.exports = function(app, passport) {
     })
 
     app.get('/admin', utils.isAdmin, function (req, res) {
-      bugs.find( {solved : false} , function(err, data) {
+      Bugs.find( {solved : false} , function(err, data) {
        if (err) {
         req.flash('message', 'Ocurrió un error al consultar la base de datos');
         return res.redirect('/');
@@ -41,7 +40,7 @@ module.exports = function(app, passport) {
 
     app.post('/solve', utils.isAdminAPI, function (req, res) {
 
-      bugs.find( { _id : req.param('id')} , function(err, data) {
+      Bugs.find( { _id : req.param('id')} , function(err, data) {
        if (err) {
         //return res.redirect('/bugs/admin.html');
         return res.status(500).json({ok : false, error : 'Ocurrió un error al consultar la base de datos'});

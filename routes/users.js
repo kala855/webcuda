@@ -72,7 +72,6 @@ module.exports = function(app,passport){
                           if (err)
                             return res.render('error', {ok : false , error : 'Hubo un error al registrar el usuario: ' + err.validate.errors[0].message});
                           else {
-                            console.log('lo creo?');
                             req.flash('message', 'Bienvenido ' + user.username + '!');
                             return res.redirect('/');
                           }

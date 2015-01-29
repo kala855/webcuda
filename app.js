@@ -80,10 +80,10 @@ app.use(passport.session());
 app.use(flash());
 
 require('./routes/index.js')(app, passport);
-//require('./routes/admin.js')(app, passport);
+require('./routes/admin.js')(app, passport);
 require('./routes/users.js')(app, passport);
 require('./routes/textEditor.js')(app, passport);
-
+require('./routes/bugs.js')(app,passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

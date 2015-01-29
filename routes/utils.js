@@ -47,11 +47,11 @@ module.exports = {
 
 
   isAdmin : function (req, res, next) {
-    return reqAdmin('admin', req, res, next);
+    return reqAdmin(req, res, next);
   },
 
   isAdminAPI : function (req, res, next) {
-    return reqAdminAPI('admin', req, res, next);
+    return reqAdminAPI(req, res, next);
   }
 
 };
