@@ -3,7 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 
 router.post('/', function(req, res) {
-  fs.writeFile('./codes/'+req.body.fileName+'.cc',req.body.source,function(err){
+  fs.writeFile('./codes/'+req.body.fileName+'.cu',req.body.source,function(err){
     var response = {};
     if(err){
       console.log(err);

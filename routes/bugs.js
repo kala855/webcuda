@@ -9,7 +9,7 @@ module.exports = function(app, passport) {
 
     app.post('/submit', utils.isLoggedIn, function(req, res) {
       var bugs = req.body;
-      bugs.reporter = req.user.code;
+      bugs.reporter = req.user.username;
       Bugs.create(bugs, function (err, ans) {
         if (err)
           return res.render('error.html', {ok : false, error : err});
@@ -39,17 +39,23 @@ module.exports = function(app, passport) {
     });
 
     app.post('/solve', utils.isAdminAPI, function (req, res) {
-      Bugs.find( { _id : req.param('_id')} , function(err, data) {
+
+      Bugs.find( { _id : req.param('id')} , function(err, data) {
        if (err) {
+        //return res.redirect('/bugs/admin.html');
         return res.status(500).json({ok : false, error : 'Ocurrió un error al consultar la base de datos'});
        } else if (data.length === 0) {
+        //req.flash('message', 'No se encontró una petición con este id');
+        //return res.redirect('/bugs/admin.html');
         return res.status(500).json({ok : false, error : 'No se encontró una petición con este id'});
        }
 
        data = data[0];
        data.solved = true;
        data.save();
-       res.json({ok:true, data : 'La solicitud fue aprovada exitosamente'});
+       // req.flash('message', 'La solicitud fue aprovada exitosamente');
+       // res.redirect('bugs/admin.html');
+       res.json({ok:true, data : 'La solicitud fue aprobada exitosamente'});
       });
     });
 

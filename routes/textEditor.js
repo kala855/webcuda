@@ -17,7 +17,7 @@ module.exports = function(app,passport){
 
 
     app.post('/textEditor/saveCode', function(req, res) {
-      fs.writeFile('./codes/'+req.body.fileName+'.cc',req.body.source,function(err){
+      fs.writeFile('./codes/'+req.body.fileName+'.cu',req.body.source,function(err){
         var response = {};
         if(err){
           console.log(err);
@@ -41,9 +41,9 @@ module.exports = function(app,passport){
     app.post('/textEditor/compileCode', function(req, res) {
       var child;
       var path =  __dirname + "/../codes/";
-      var name = req.body.cname + ".cc";
+      var name = req.body.cname + ".cu";
       console.log(req.body);
-      var comp = "g++ " + path + name + " -o ./codes/cuda";
+      var comp = "nvcc " + path + name + " -o ./codes/cuda";
       console.log(comp);
       child = exec(comp, function (error, stdout, stderr) {
         if (error) {
