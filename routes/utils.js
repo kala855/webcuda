@@ -18,7 +18,7 @@ function reqAdmin(req, res, next) {
 
 function reqAdminAPI(req, res, next) {
   if (req.isAuthenticated()){
-    req.user.hasRole(function(ans){
+    req.user.isAdmin(function(ans){
       if (ans)
         return next();
       return  res.json(401 , { ok : false, error : 'No tiene permisos para esta operación'});

@@ -13,7 +13,6 @@
           <th> Tipo </th>
           <th> Fecha de modificación </th>
           <th> Descripción </th>
-          <th> Adicionar comentario </th>
           <th> Marcar como resuelto </th>
         </tr>
 
@@ -24,7 +23,6 @@
           <td> <%= bug.type %>  </td>
           <td> <%= new Date(bug.mtime) %> </td>
           <td> <%= bug.desc %> </td>
-          <td> <textarea name='bugNotes' class='form-control' placeholder='Solución'></textarea> </td>
           <td> <button type='button' class='btn btn-info' <%= 'onclick=resolve("' + bug._id + '")'%> > Resolver </button> </td>
       </tr>
       <% }) %>

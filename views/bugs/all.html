@@ -3,7 +3,7 @@
 
 <div class="panel panel-success">
   <div class="panel-heading">
-    <h1 class="panel-title">Listado de PQR's</h1>
+    <h1 class="panel-title">Listado de bugs</h1>
   </div>
   <div class="panel-body">
     <table class="table table-hover">
@@ -17,13 +17,13 @@
         </tr>
 
       </thead>
-      <% data.forEach(function(pqr){ %>
+      <% data.forEach(function(bug){ %>
         <tr>
-          <td> <%= pqr.reporter %>  </td>
-          <td> <%= pqr.type %>  </td>
-          <td> <%= new Date(pqr.mtime) %> </td>
-          <td> <%= pqr.desc %> </td>
-          <td> <%= pqr.notes %> </td>
+          <td> <%= bug.reporter %>  </td>
+          <td> <%= bug.type %>  </td>
+          <td> <%= new Date(bug.mtime) %> </td>
+          <td> <%= bug.desc %> </td>
+          <td> <%= bug.notes %> </td>
       </tr>
       <% }) %>
     </table>
