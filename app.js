@@ -46,6 +46,9 @@ passport.use(new LocalStrategy({
 
           if (res == false)
             return done(null, false, { message: 'Contraseña inválida' });
+
+          if (!user.activated)
+            return done(null, false, { message: 'Usuario no activado' });
           return done(null, user);
         });
       })

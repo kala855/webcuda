@@ -8,7 +8,7 @@ function reqAdmin(req, res, next) {
         req.flash('message', 'No tiene permisos para esta operación');
         res.redirect('/');
       }
-    })
+    });
   } else {
     req.flash('message', 'No ha iniciado sesión.');
     res.redirect('/');

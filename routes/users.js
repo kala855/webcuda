@@ -45,6 +45,7 @@ module.exports = function(app,passport){
     app.post('/signup', function(req, res) {
       var rounds = (env == 'development') ? 10 : 13;
       var user   =  req.body;
+      console.log('hola');
       User.find( {code : user.code}, function(err, ans) {
         if (err)
           return res.render('error', {ok : false, error : err});
@@ -55,10 +56,12 @@ module.exports = function(app,passport){
             if (ans.length == 0) {
                 if (user.password != user.passwordConfirm) {
                   req.flash('message', 'Las contraseñas no coinciden');
+                  console.log('no coinciden');
                   return res.redirect('users/signup');
                 } else {
                   if (user.password.length < 8) {
                     req.flash('message', 'La longitud de la contraseña debe ser mínimo de 8 caracteres');
+                    console.log('muy corta');
                     return res.redirect('users/signup');
                   }
 

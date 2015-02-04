@@ -12,7 +12,7 @@
     <!--on our web server and will be delivered faster to the client than our own server.-->
     <link rel='stylesheet' href='/css/bootstrap.min.css'>
     <!--link rel='stylesheet' href='/css/bootstrap-theme.min.css'-->
-    <!--link rel='stylesheet' href='/css/style.css'-->
+    <link rel='stylesheet' href='/css/style.css'>
     <link rel='stylesheet' href='/css/font-awesome.min.css'>
     <link rel='stylesheet' href='/css/codemirror.css'>
     <script src='/js/codemirror/codemirror.min.js'></script>
@@ -32,9 +32,9 @@
     <!--link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')-->
   </head>
   <body>
-    <div class='container'>
       <nav role='navigation' class='navbar navbar-inverse'>
-      <div class='container-fluid'>
+    <!--div class='container'-->
+      <div class='container'>
         <div class='navbar-header'>
           <button data-toggle='collapse' data-target='#navbar-collapse' class='navbar-toggle collapsed'>
             <span class='sronly'></span>
@@ -103,14 +103,15 @@
 
           </div>
           </nav>
-        </div>
+        <!--!/div-->
 
         <div class='container'>
           <% if (typeof message == 'object' && !isEmpty(message)) { %>
-          <!--div class='alert alert-info alert-dismissable'>
+          <% console.log(message) %>
+          <div class='alert alert-info alert-dismissable'>
           <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
           <p><%= message %></p>
-          </div-->
+          </div>
           <% } %>
           <% if( typeof title != 'undefined') { %>
           <h2 id='cname'> <%=title%> </h2>
@@ -118,6 +119,6 @@
 
           <%- body %>
         </div>
-      </div>
+      <!--/div-->
     </body>
   </html>

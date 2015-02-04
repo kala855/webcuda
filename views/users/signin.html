@@ -1,19 +1,12 @@
 <% layout('../layout') -%>
+<div class='container'>
 
-<form action='/users/signin' method='post' role='form' class='form-horizontal'>
-  <div class='form-group'>
-    <label for='inputUser' class='col-sm-2 control-label'>Código:</label>
-    <div class='col-sm-5'>
-      <input type='text' name='code' id='inputUser' class='form-control'/>
-    </div>
-  </div>
-  <div class='form-group'>
-    <label for='inputPassword' class='col-sm-2 control-label'>Contraseña:</label>
-    <div class='col-sm-5'>
-      <input type='password' id='inputPassword3' name='password' class='form-control'/>
-    </div>
-  </div>
-  <div class='col-sm-3'>
-    <button type='submit' class='btn btn-primary'>Login</button>
-  </div>
+<form action='/users/signin' method='post' role='form' class='form-signin'>
+  <h2 class='form-signin-heading'>Please Sign in</h2>
+    <label for='inputUser' class='sr-only' >Code</label>
+    <input type='text' name='code' id='inputUser' class='form-control' placeholder='Code'required autofocus/>
+    <label for='inputPassword' class='sr-only'>Password</label>
+    <input type='password' id='inputPassword' name='password' class='form-control' placeholder='Password' required/>
+    <button type='submit' class='btn btn-lg btn-primary btn-block'>Sign in</button>
+</div>
 </form>
