@@ -45,7 +45,13 @@ module.exports = function(app,passport){
       console.log(req.body);
       var comp = "nvcc " + path + name + " -o ./codes/cuda";
       console.log(comp);
-      child = exec(comp, function (error, stdout, stderr) {
+      child = exec(comp,{ encoding: 'utf8',
+                          timeout: 1000,
+                          maxBuffer: 200*1024,
+                          killSignal: 'SIGTERM',
+                          cwd: null,
+                          env: null },
+      function (error, stdout, stderr) {
         if (error) {
           console.log(error.stack);
           console.log('Error code compile: '+error.code);
