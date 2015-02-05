@@ -1,8 +1,5 @@
 function modifyActivation(checkBox, id) {
-  console.log('aaaa');
-  console.log(document.URL);
   var url = document.URL + (checkBox.checked ? '/activate' : '/deactivate');
-  console.log(url);
   jQuery.post(url, {id:id}, function(d, textStatus, jqXHR) {
     alert(JSON.stringify(d.data));
     location.reload();

@@ -16,8 +16,7 @@ module.exports = function(app,passport){
 
     app.post('/activate', utils.isAdminAPI, function(req,res){
       var id = req.param('id');
-      console.log('activate');
-      User.update(id, {activate : 'true'}, function(err,data){
+      User.update(id, {activated : true}, function(err,data){
         if(err)
           res.status(500).json({ok : false, error : err});
         else
@@ -33,21 +32,20 @@ module.exports = function(app,passport){
           return res.status(500).json({ok : false, error : 'Database error'});
         user = user[0];
         if(user.role === 'Admin')
-          return res.status(500).json({ok : false, error : 'El usuario administrador no puede ser desactivado'});
+          return res.status(500).json({ok : false, error : 'The admin user can\'t be deactivated'});
       }); //user.find(__id)
 
-      User.update(id, {activate : 'false'}, function(err,data){
-        if(err)
+      User.update(id, {activated : false}, function(err,data){
+       if(err)
           res.status(500).json({ok : false, error : err});
         else
-          res.json({ ok : true, data : 'El usuario fue activado exitosamente'});
+          res.json({ ok : true, data : 'The user was successfully deactivated'});
       }); //User.update
     }); //app.post('/deactivate')
 
     app.post('/del/:id',utils.isAdmin,function (req,res) {
       var id = req.param('id');
 
-        console.log('hay error');
       User.find({_id : id}, function(err,user){
         if(err)
           return res.status(500).json({ok : false, error : 'Database error'});

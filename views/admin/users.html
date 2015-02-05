@@ -25,6 +25,8 @@
               <label>
                 <input type="checkbox" <%= 'onclick=modifyActivation(this,"' + user._id + '")'%>
                 <%= (user.isActivated() ? 'checked=checked' : '')%> value="activated">
+                <% console.log(user.code) %>
+                <% console.log(user.isActivated())  %>
                 Activado
               </label>
             </div>
