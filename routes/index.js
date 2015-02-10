@@ -2,7 +2,7 @@
 
 module.exports = function(app,passport){
   app.get('/', function(req, res) {
-    var msgh = req.flash() || req.flash('sucess');
+    var msgh =  req.flash('message') || req.flash('sucess');
     res.render('index', { user : req.user, message: msgh });
   });
 

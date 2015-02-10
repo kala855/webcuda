@@ -19,7 +19,7 @@ module.exports = function(app,passport){
     });
 
     app.get('/signup',function(req, res){
-      res.render('users/signup',{user : req.user});
+      res.render('users/signup',{user : req.user, message : req.flash('message')});
     });
 
     app.post('/signin', passport.authenticate('local', {
@@ -30,7 +30,7 @@ module.exports = function(app,passport){
     }));
 
     app.get('/aftersignin', function(req, res) {
-      req.flash('message', 'Bienvenido !');
+      //req.flash('message', 'Bienvenido !');
       res.redirect('../');
     });
 
@@ -57,12 +57,12 @@ module.exports = function(app,passport){
                 if (user.password != user.passwordConfirm) {
                   req.flash('message', 'Las contraseñas no coinciden');
                   console.log('no coinciden');
-                  return res.redirect('users/signup');
+                  return res.redirect('/users/signup');
                 } else {
                   if (user.password.length < 8) {
                     req.flash('message', 'La longitud de la contraseña debe ser mínimo de 8 caracteres');
                     console.log('muy corta');
-                    return res.redirect('users/signup');
+                    return res.redirect('/users/signup');
                   }
 
                   user.passwordConfirm = null;
@@ -85,12 +85,12 @@ module.exports = function(app,passport){
                 }
             } else {
               req.flash('message', 'El correo "' + user.email + '" ya está siendo usado!');
-              return res.redirect('users/signup');
+              return res.redirect('/users/signup');
             }
           });
         } else {
           req.flash('message', 'El estudiante con el codigo' + user.code + '" ya está registrado!');
-          return res.redirect('users/signup');
+          return res.redirect('/users/signup');
         }
       });
     });

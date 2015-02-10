@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "start-daemon" : "forever /bin/www start",
+    "start-daemon" : "forever ./bin/www start",
     "stop-daemon" : "forever stopall"
   },
   "dependencies": {
