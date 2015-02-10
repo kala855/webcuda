@@ -9,7 +9,7 @@ module.exports = function(app, passport) {
 
     app.post('/submit', utils.isLoggedIn, function(req, res) {
       var bugs = req.body;
-      bugs.reporter = req.user.username;
+      bugs.reporter = req.user.name;
       Bugs.create(bugs, function (err, ans) {
         if (err)
           return res.render('error.html', {ok : false, error : err});

@@ -30,7 +30,7 @@ module.exports = function(app,passport){
     }));
 
     app.get('/aftersignin', function(req, res) {
-      //req.flash('message', 'Bienvenido !');
+      req.flash('message', 'Bienvenido !');
       res.redirect('../');
     });
 
