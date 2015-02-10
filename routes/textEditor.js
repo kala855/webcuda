@@ -17,7 +17,9 @@ module.exports = function(app,passport){
 
 
     app.post('/textEditor/saveCode', function(req, res) {
-      fs.writeFile('./codes/'+req.body.fileName+'.cu',req.body.source,function(err){
+      if(!fs.existsSync('./codes/' +req.user.code))
+        fs.mkdirSync('./codes/'+req.user.code);
+      fs.writeFile('./codes/'+req.user.code+'/'+req.body.fileName+'.cu',req.body.source,function(err){
         var response = {};
         if(err){
           console.log(err);
@@ -40,9 +42,9 @@ module.exports = function(app,passport){
      */
     app.post('/textEditor/compileCode', function(req, res) {
       var child;
-      var path =  __dirname + "/../codes/";
+      var path = "./codes/"+req.user.code+"/";
       var name = req.body.cname + ".cu";
-      var comp = "nvcc " + path + name + " -o ./codes/cuda";
+      var comp = "nvcc " + path + name + " -o " + path + 'cuda';
 
       child = exec(comp,
                   // { timeout: 1000,
@@ -63,7 +65,7 @@ module.exports = function(app,passport){
           return;
         }
         console.log('Compile STDOUT1: '+stdout);
-        var child2 = exec("./codes/cuda", function (error, stdout, stderr) {
+        var child2 = exec("./codes/" + req.user.code +"/cuda", function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
             console.log(error.stack);
