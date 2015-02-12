@@ -30,7 +30,7 @@ module.exports = function(app,passport){
     }));
 
     app.get('/aftersignin', function(req, res) {
-      req.flash('message', 'Bienvenido !');
+      req.flash('message', 'Bienvenido ' + req.user.name );
       res.redirect('../');
     });
 
@@ -75,7 +75,7 @@ module.exports = function(app,passport){
                           if (err)
                             return res.render('error', {ok : false , error : 'Hubo un error al registrar el usuario: ' + err.validate.errors[0].message});
                           else {
-                            req.flash('message', 'Bienvenido ' + user.username + '!');
+                            req.flash('message', 'Bienvenido ' + user.name + ' debe esperar a que su cuenta sea activada');
                             return res.redirect('/');
                           }
                         });

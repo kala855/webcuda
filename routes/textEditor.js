@@ -44,7 +44,7 @@ module.exports = function(app,passport){
       var child;
       var path = "./codes/"+req.user.code+"/";
       var name = req.body.cname + ".cu";
-      var comp = "nvcc " + path + name + " -o " + path + 'cuda';
+      var comp = "nvcc " + path + name + " -o " + path + req.user.code;
 
       child = exec(comp,
                   // { timeout: 1000,
@@ -56,7 +56,7 @@ module.exports = function(app,passport){
           console.log(error.stack);
           console.log('Error code compile: '+error.code);
           console.log('Signal received compile: '+error.signal);
-          res.send("Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal);
+          res.send("Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr);
           return;
         }
         if(stderr) {
