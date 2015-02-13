@@ -14,7 +14,7 @@ function guardarCodigo(){
   code = editor.getValue();
   name = $('#cname').text();
   if(name == " Unsaved "){
-    bootbox.prompt("Ingrese el nombre del archivo", function(result) {
+    bootbox.prompt("Ingrese el nombre del archivo sin extencion", function(result) {
       if(result !== null){
         name = result;
         if(name.length > 0){

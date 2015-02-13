@@ -19,6 +19,15 @@ module.exports = function(app,passport){
     app.post('/textEditor/saveCode', function(req, res) {
       if(!fs.existsSync('./codes/' +req.user.code))
         fs.mkdirSync('./codes/'+req.user.code);
+      var pattern = /.*system\(.*/;
+      var source = req.body.source;
+      if( source.search(pattern) != -1){
+        var response = {};
+        response.err = true;
+        response.msg = 'No esta permitido hacer llamados al sistema';
+        res.json(response);
+        return;
+      }
       fs.writeFile('./codes/'+req.user.code+'/'+req.body.fileName+'.cu',req.body.source,function(err){
         var response = {};
         if(err){
@@ -65,7 +74,7 @@ module.exports = function(app,passport){
           return;
         }
         console.log('Compile STDOUT1: '+stdout);
-        var child2 = exec("./codes/" + req.user.code +"/cuda", function (error, stdout, stderr) {
+        var child2 = exec("./codes/" + req.user.code +"/"+req.user.code, function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
             console.log(error.stack);
