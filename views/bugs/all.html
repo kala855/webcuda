@@ -9,11 +9,11 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th> Usuario que reporta </th>
-          <th> Tipo </th>
-          <th> Fecha de modificación </th>
-          <th> Descripción </th>
-          <th> Comentario </th>
+          <th> Who report </th>
+          <th> Type </th>
+          <th> Date of submit </th>
+          <th> Description </th>
+          <th> Resolved </th>
         </tr>
 
       </thead>
@@ -23,7 +23,6 @@
           <td> <%= bug.type %>  </td>
           <td> <%= new Date(bug.mtime) %> </td>
           <td> <%= bug.desc %> </td>
-          <td> <%= bug.notes %> </td>
       </tr>
       <% }) %>
     </table>

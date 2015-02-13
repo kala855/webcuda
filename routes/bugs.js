@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
       Bugs.create(bugs, function (err, ans) {
         if (err)
           return res.render('error.html', {ok : false, error : err});
-        req.flash('message' , 'bugs fue registrado exitosamente');
+        req.flash('message' , 'The bug was successfully reported');
         res.redirect('/');
       });
     });
@@ -21,7 +21,7 @@ module.exports = function(app, passport) {
     app.get('/all', utils.isAdmin, function (req, res) {
       Bugs.all(function(err, data) {
         if (err) {
-          req.flash('message', 'Ocurrió un error al consultar la base de datos');
+          req.flash('message', 'Database error');
           return res.redirect('/');
         }
         res.render('bugs/all.html', {user : req.user, data : data});
@@ -31,7 +31,7 @@ module.exports = function(app, passport) {
     app.get('/admin', utils.isAdmin, function (req, res) {
       Bugs.find( {solved : false} , function(err, data) {
        if (err) {
-        req.flash('message', 'Ocurrió un error al consultar la base de datos');
+        req.flash('message', 'Database error');
         return res.redirect('/');
        }
        res.render('bugs/admin.html', {user : req.user, data : data});
@@ -42,20 +42,15 @@ module.exports = function(app, passport) {
 
       Bugs.find( { _id : req.param('id')} , function(err, data) {
        if (err) {
-        //return res.redirect('/bugs/admin.html');
-        return res.status(500).json({ok : false, error : 'Ocurrió un error al consultar la base de datos'});
+        return res.status(500).json({ok : false, error : 'Database error'});
        } else if (data.length === 0) {
-        //req.flash('message', 'No se encontró una petición con este id');
-        //return res.redirect('/bugs/admin.html');
-        return res.status(500).json({ok : false, error : 'No se encontró una petición con este id'});
+        return res.status(500).json({ok : false, error : 'Bug id not found'});
        }
 
        data = data[0];
        data.solved = true;
        data.save();
-       // req.flash('message', 'La solicitud fue aprovada exitosamente');
-       // res.redirect('bugs/admin.html');
-       res.json({ok:true, data : 'La solicitud fue aprobada exitosamente'});
+       res.json({ok:true, data : 'Bug solutioned'});
       });
     });
 

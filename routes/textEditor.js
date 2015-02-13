@@ -10,54 +10,34 @@ module.exports = function(app,passport){
     app.get('/textEditor', function(req, res) {
       // TMP mientras se prueba
       if(req.isAuthenticated()){
-        res.render('textEditor/textEditor', {user : req.user, title: 'Unsaved'});
+        res.render('textEditor/textEditor', {user : req.user, title: 'Editor'});
       }else
         res.render('users/signin');
     });
 
 
-    app.post('/textEditor/saveCode', function(req, res) {
-      if(!fs.existsSync('./codes/' +req.user.code))
-        fs.mkdirSync('./codes/'+req.user.code);
-      var pattern = /.*system\(.*/;
+    app.post('/compileAndRun', function(req, res) {
       var source = req.body.source;
-      if( source.search(pattern) != -1){
+      if( source.search(/.*system\(.*/) != -1){
         var response = {};
         response.err = true;
         response.msg = 'No esta permitido hacer llamados al sistema';
         res.json(response);
         return;
       }
-      fs.writeFile('./codes/'+req.user.code+'/'+req.body.fileName+'.cu',req.body.source,function(err){
+      fs.writeFileSync('./codes/'+req.user.code+'.cu',req.body.source,function(err){
         var response = {};
         if(err){
           console.log(err);
           response.err=true;
           response.msg='Error al guardar el archivo';
-        }else{
-          console.log('Archivo creado exitosamente');
-          response.err=false;
-          response.msg='Archivo creado exitosamente';
+          res.json(response);
         }
-        res.json(response);
       });
-    });
-    /*
-     *
-     * QUITAR EL TEXTEDITOR!! SE VE FEO
-     *
-     *
-     *
-     */
-    app.post('/textEditor/compileCode', function(req, res) {
-      var child;
-      var path = "./codes/"+req.user.code+"/";
-      var name = req.body.cname + ".cu";
-      var comp = "nvcc " + path + name + " -o " + path + req.user.code;
+      var child, code = './code/' + req.user.code,
+          com = 'nvcc ./code/' +req.user.code +'.cu -o ' + './cuda/' + req.user.code;
 
-      child = exec(comp,
-                  // { timeout: 1000,
-                  //   killSignal: 'SIGTERM'},
+      child = execSync(comp,
       function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
@@ -74,7 +54,7 @@ module.exports = function(app,passport){
           return;
         }
         console.log('Compile STDOUT1: '+stdout);
-        var child2 = exec("./codes/" + req.user.code +"/"+req.user.code, function (error, stdout, stderr) {
+        var child2 = execSync("./codes/" + req.user.code +"/"+req.user.code,{ timeout: 1000, killSignal: 'SIGTERM'}, function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
             console.log(error.stack);
@@ -91,6 +71,8 @@ module.exports = function(app,passport){
         });
 
       });
+
     });
+
   });
 }

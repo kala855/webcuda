@@ -51,12 +51,12 @@ module.exports = function(app,passport){
           return res.status(500).json({ok : false, error : 'Database error'});
         user = user[0];
         if(user.role === 'Admin')
-          return res.status(500).json({ok : false, error : 'El usuario administrador no puede ser eliminado'});
+          return res.status(500).json({ok : false, error : 'The Admin user can\'t be deleted'});
       }); //user.find(__id)
 
       User.destroy({_id : id}, function(err, data){
         if (err)
-          res.status(500).json({ok : false, error : err});
+          res.status(500).json({ok : false, error : err + 'err destroying'});
         else 
           res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
       }); //user.destroy

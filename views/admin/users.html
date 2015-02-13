@@ -8,26 +8,24 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th> Nombre de usuario  </th>
-          <th> Id </th>
-          <th> Fecha de modificación </th>
-          <th> Activo </th>
+          <th> User code  </th>
+          <th> Name of the user </th>
+          <th> Last modification </th>
+          <th> Activated </th>
         </tr>
 
       </thead>
       <% data.forEach(function(user){ %>
         <tr>
           <td> <%= user.code %>  </td>
-          <td> <%= user.id %> </td>
+          <td> <%= user.name %> </td>
           <td> <%= new Date(user.mtime) %> </td>
           <td>
             <div class="checkbox">
               <label>
                 <input type="checkbox" <%= 'onclick=modifyActivation(this,"' + user._id + '")'%>
                 <%= (user.isActivated() ? 'checked=checked' : '')%> value="activated">
-                <% console.log(user.code) %>
-                <% console.log(user.isActivated())  %>
-                Activado
+                Activated
               </label>
             </div>
 
