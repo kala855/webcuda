@@ -16,55 +16,76 @@ module.exports = function(app,passport){
 
 
     app.post('/compileAndRun', function(req, res) {
+      var response = {};
+      response.msg = "";
       var source = req.body.source;
       if( source.search(/.*system\(.*/) != -1) {
-        var response = {err : true, msg};
         response.err = true;
-        response.msg = 'No esta permitido hacer llamados al sistema';
+        response.msg = 'You can\'t call system functions';
         res.json(response);
         return;
       }
-      var code = './code/' + req.user.code,
-          file = code + '.cu';
-      fs.writeFileSync(file,source, function(err){
-        var response = {};
-        if(err){
-          console.log(err);
-          response.err=true;
-          response.msg='Error al guardar el archivo';
-          res.json(response);
-          return;
-        }
-      });
-      var comp = 'nvcc' + code + '.cu -o ' + code;
+      if(response.err) return;
 
-      var child = execSync(comp, ,function (error, stdout, stderr) {
+      var code = './codes/' + req.user.code,
+          file = code + '.cc';
+      try {
+        fs.writeFileSync(file,source);
+      } catch (e) {
+        response.err = true;
+        response.msg = e;
+      }
+      if(response.err){
+        res.send(response.msg);
+        return;
+      }
+
+      var comp = 'g++ ' + file + ' -Wall -O2 -o ' + code;
+      var child = exec(comp, function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
           console.log(error);
-          res.send("Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr);
+          response.err = true;
+          response.msg = "Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr;
+          res.json(response);
           return;
         }
         if(stderr) {
           console.log('Compile STDERR1: '+stderr);
-          res.send(stderr);
-          return;
+          response.err = false;
+          response.msg += '\n--------warnings---------\n' + stderr + '\n-------------------------\n';
+          console.log(stderr);
+          //res.json(response);
         }
+        fs.unlink(file, function (err){
+          if(err)
+            console.log('error removing executable');
+        });
+
+        var child2 = exec(code, { timeout: 1000 * 60 * 2, killSignal: 'SIGKILL'}, function (error, stdout, stderr) {
+          if (error) {
+            console.log('run error');
+            response.err = true;
+            response.msg = "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
+            res.send(response.msg);
+            fs.unlink(code, function (err){
+              if(err)
+                console.log('error removing executable');
+            });
+            return;
+          }
+          // agregar child2.onKillSignal
+          if(stderr.lenght > 0)
+            response.msg += '\n-------------------------\n' + stderr + '\n-------------------------\n';
+          response.msg += stdout;
+          res.send(response.msg);
+          fs.unlink(code, function (err){
+            if(err)
+              console.log('error removing executable');
+          });
+        });
       });
 
-      console.log('Compile STDOUT1: '+stdout);
-      var child2 = execSync(code, { timeout: 1000, killSignal: 'SIGKILL'}, function (error, stdout, stderr) {
-        if (error) {
-          console.log('run error');
-          console.log(error.stack);
-          res.send("Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal);
-          return;
-        }
-        // agregar child2.onKillSignal
-        console.log('Run STDERR: '+stderr);
-        if(stderr.lenght > 0)
-          res.send(stderr + '\n-------------------------\n' + stdout);
-      });
 
     });
 

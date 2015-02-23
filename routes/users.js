@@ -25,12 +25,12 @@ module.exports = function(app,passport){
     app.post('/signin', passport.authenticate('local', {
       successRedirect : 'aftersignin',
       failureRedirect : 'signin',
-      successFlash : 'Bienvenido!',
+      successFlash : 'Welcome!',
       failureFlash : true
     }));
 
     app.get('/aftersignin', function(req, res) {
-      req.flash('message', 'Bienvenido ' + req.user.name );
+      req.flash('message', 'Welcome ' + req.user.name );
       res.redirect('../');
     });
 
@@ -45,7 +45,6 @@ module.exports = function(app,passport){
     app.post('/signup', function(req, res) {
       var rounds = (env == 'development') ? 10 : 13;
       var user   =  req.body;
-      console.log('hola');
       User.find( {code : user.code}, function(err, ans) {
         if (err)
           return res.render('error', {ok : false, error : err});
@@ -55,13 +54,13 @@ module.exports = function(app,passport){
               return res.render('error', {ok : false, error : err});
             if (ans.length == 0) {
                 if (user.password != user.passwordConfirm) {
-                  req.flash('message', 'Las contraseñas no coinciden');
-                  console.log('no coinciden');
+                  req.flash('message', 'The passwords don\'t match');
+                  console.log('no match');
                   return res.redirect('/users/signup');
                 } else {
                   if (user.password.length < 8) {
-                    req.flash('message', 'La longitud de la contraseña debe ser mínimo de 8 caracteres');
-                    console.log('muy corta');
+                    req.flash('message', 'Your password is too short');
+                    console.log('short');
                     return res.redirect('/users/signup');
                   }
 
@@ -73,9 +72,9 @@ module.exports = function(app,passport){
                       crypto.randomBytes(20, function(err, buf) {
                         User.create(user, function(err, data) {
                           if (err)
-                            return res.render('error', {ok : false , error : 'Hubo un error al registrar el usuario: ' + err.validate.errors[0].message});
+                            return res.render('error', {ok : false , error : 'Data base error: ' + err.validate.errors[0].message});
                           else {
-                            req.flash('message', 'Bienvenido ' + user.name + ' debe esperar a que su cuenta sea activada');
+                            req.flash('message', 'Welcome ' + user.name + ', wait until your account is activated');
                             return res.redirect('/');
                           }
                         });
@@ -84,12 +83,12 @@ module.exports = function(app,passport){
                   });
                 }
             } else {
-              req.flash('message', 'El correo "' + user.email + '" ya está siendo usado!');
+              req.flash('message', 'The email "' + user.email + '" is already in use!');
               return res.redirect('/users/signup');
             }
           });
         } else {
-          req.flash('message', 'El estudiante con el codigo' + user.code + '" ya está registrado!');
+          req.flash('message', 'The student code ' + user.code + '" is already in use!');
           return res.redirect('/users/signup');
         }
       });

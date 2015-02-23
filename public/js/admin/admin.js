@@ -13,7 +13,7 @@ function modifyActivation(checkBox, id) {
 
 function deleteUser(user) {
   var id = user.value;
-  var r = confirm("¿Está seguro?");
+  var r = confirm("are you sure?");
   if (r == true) {
     var url = document.URL + '/del/' + id;
     jQuery.post(url,function(d, textStatus, jqXHR){

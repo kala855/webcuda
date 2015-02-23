@@ -5,12 +5,12 @@ function reqAdmin(req, res, next) {
       if (ans)
         return next();
       else {
-        req.flash('message', 'No tiene permisos para esta operación');
+        req.flash('message', 'Permission denied');
         res.redirect('/');
       }
     });
   } else {
-    req.flash('message', 'No ha iniciado sesión.');
+    req.flash('message', 'Please sign in.');
     res.redirect('/');
   }
 }
@@ -21,10 +21,10 @@ function reqAdminAPI(req, res, next) {
     req.user.isAdmin(function(ans){
       if (ans)
         return next();
-      return  res.json(401 , { ok : false, error : 'No tiene permisos para esta operación'});
+      return  res.json(401 , { ok : false, error : 'Permission denied'});
     });
   } else {
-    res.json(401 , { ok : false, error : 'No ha iniciado sesión'});
+    res.json(401 , { ok : false, error : 'Please sign in.'});
   }
 }
 
@@ -34,7 +34,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next();
     } else {
-      req.flash('message', 'No ha iniciado sesión.');
+      req.flash('message', 'Please sign in.');
       res.redirect('/');
     }
   },
@@ -42,7 +42,7 @@ module.exports = {
   isLoggedInAPI : function(req, res, next) {
     if (req.isAuthenticated())
       return next();
-    res.json(401, {ok : false, error : 'Necesita permisos para esta operación'});
+    res.json(401, {ok : false, error : 'Permission denied'});
   },
 
 
