@@ -1,0 +1,45 @@
+<% layout('../layout') -%>
+
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h1 class="panel-title">Administración de roles</h1>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th> User code  </th>
+          <th> Name of the user </th>
+          <th> Last modification </th>
+          <th> Activated </th>
+        </tr>
+
+      </thead>
+      <% data.forEach(function(user){ %>
+        <tr>
+          <td> <%= user.code %>  </td>
+          <td> <%= user.name %> </td>
+          <td> <%= new Date(user.mtime) %> </td>
+          <td>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" <%= 'onclick=modifyActivation(this,"' + user._id + '")'%>
+                <%= (user.isActivated() ? 'checked=checked' : '')%> value="activated">
+                Activated
+              </label>
+            </div>
+
+          </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-danger" value=<%= user._id %>  onclick="deleteUser(this);"> Delete </button>
+            </div>
+          </td>
+
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+
+<script src="/js/admin/admin.js"> </script>

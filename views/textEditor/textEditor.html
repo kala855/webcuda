@@ -1,0 +1,18 @@
+<% layout('../layout') -%>
+<div class="container">
+  <form>
+    <textarea id='prueba' rows='25' class='form-control textcontainer'></textarea>
+    <input type='button' value='Run' id='compilar' onclick='compileAndRun()' class='btn btn-default'/>
+    <textarea id='textAreaCompileError' rows='10' class='form-control' readonly></textarea>
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById('prueba'),{
+        lineNumbers: true,
+        matchBrackets: true,
+        indentUnit: 2,
+        smartIndent: true,
+        tabSize: 2,
+        mode: 'text/x-csrc'
+        });
+      </script>
+    </form>
+<div>

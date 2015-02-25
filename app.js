@@ -1,22 +1,68 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var express       = require('express'),
+    session       = require('express-session'),
+    path          = require('path'),
+    engine        = require('ejs-locals'),
+    favicon       = require('serve-favicon'),
+    logger        = require('morgan'),
+    env           = process.env.NODE_ENV || 'development',
+    cookieParser  = require('cookie-parser'),
+    bodyParser    = require('body-parser'),
+    passport      = require('passport'),
+    bcrypt        = require('bcrypt'),
+    namespace     = require('express-namespace'),
+    resourceful   = require('resourceful'),
+    LocalStrategy = require('passport-local').Strategy,
+    flash         = require('connect-flash');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var textEditor = require('./routes/textEditor');
-var saveCode = require('./routes/saveCode');
-var compileCode = require('./routes/compileCode');
-var runCode = require('./routes/runCode');
+var config = require('./config/' + env);
+//var runCode = require('./routes/runCode');
 
+var User = require('./models/user');
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.find({_id : id},function (err, user) {
+    if (err || user.length == 0)
+      done(err, null);
+    else
+      done(err, user[0]);
+  });
+});
+
+passport.use(new LocalStrategy({
+    usernameField: 'code'
+  },
+  function(username, password, done) {
+    process.nextTick(function () {
+      User.find( {code : username}, function(err, user) {
+        if (err) { return done(err); }
+        if (!user || user.length == 0) { return done(null, false, { message: 'Usuario desconocido : ' + username }); }
+        user = user[0];
+        bcrypt.compare(password, user.password, function (err, res) {
+          if (err)
+            return done(null, false, {message : 'Contraseña inválida.'}); // Dot is to differentiate it from other messages.
+
+          if (res == false)
+            return done(null, false, { message: 'Contraseña inválida' });
+
+          if (!user.activated)
+            return done(null, false, { message: 'Usuario no activado' });
+          return done(null, user);
+        });
+      })
+    });
+  }
+));
+
+//express
 var app = express();
 
 // view engine setup
+app.engine('html', engine);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -25,13 +71,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'CUDAtmp',
+  resave: false,
+  saveUninitialized: true
+}));
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/compiler/textEditor', textEditor);
-app.use('/compiler/textEditor/saveCode', saveCode);
-app.use('/compiler/textEditor/compileCode', compileCode);
-app.use('/compiler/textEditor/runCode', runCode);
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+require('./routes/index.js')(app, passport);
+require('./routes/admin.js')(app, passport);
+require('./routes/users.js')(app, passport);
+require('./routes/textEditor.js')(app, passport);
+require('./routes/bugs.js')(app,passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,9 +102,11 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
+        console.log(err);
         res.render('error', {
             message: err.message,
-            error: err
+            error: err,
+            user : req.user
         });
     });
 }
@@ -64,5 +121,8 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+
+resourceful.use('couchdb', config);
 
 module.exports = app;

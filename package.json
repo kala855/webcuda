@@ -1,18 +1,28 @@
 {
-  "name": "recipeSite",
-  "version": "0.0.0",
+  "name": "CUDAwebcompiler",
+  "version": "0.0.10",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "start-daemon" : "forever ./bin/www start",
+    "stop-daemon" : "forever stopall"
   },
   "dependencies": {
-    "express": "~4.9.0",
+    "bcrypt": "^0.8.0",
     "body-parser": "~1.8.1",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.3.3",
-    "morgan": "~1.3.0",
-    "serve-favicon": "~2.1.3",
     "debug": "~2.0.0",
-    "jade": "~1.6.0",
-    "nodemon": "*"
+    "ejs": "^1.0.0",
+    "ejs-locals": "^1.0.2",
+    "express": "~4.9.0",
+    "express-session": "^1.8.2",
+    "express-namespace": "^0.1.1",
+    "morgan": "~1.3.0",
+    "nodemon": "*",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "resourceful": "^0.2.3", 
+    "serve-favicon": "~2.1.3"
   }
 }

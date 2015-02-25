@@ -1,9 +1,17 @@
-var express = require('express');
-var router = express.Router();
-
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
-});
 
-module.exports = router;
+module.exports = function(app,passport){
+  app.get('/', function(req, res) {
+    var msgh =  req.flash('message') || req.flash('sucess');
+    res.render('index', { user : req.user, message: msgh });
+  });
+
+  app.get('/about', function(req,res) {
+    res.render('about',{user : req.user, title : "About :"} );
+  });
+
+  app.get('/agradecimientos', function(req,res) {
+    res.render('agradecimientos',{user : req.user });
+  });
+
+}

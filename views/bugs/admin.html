@@ -1,0 +1,35 @@
+<% layout('../layout') -%>
+
+
+<div class='panel panel-success'>
+  <div class='panel-heading'>
+    <h1 class='panel-title'>Administración de bugs</h1>
+  </div>
+  <div class='panel-body'>
+    <table class='table table-hover'>
+      <thead>
+        <tr>
+          <th> Who report </th>
+          <th> Type </th>
+          <th> Date of submit </th>
+          <th> Description </th>
+          <th> Resolved </th>
+        </tr>
+
+      </thead>
+      <% data.forEach(function(bug){ %>
+        <tr>
+          <td> <%= bug.reporter %>  </td>
+          <td> <%= bug.type %>  </td>
+          <td> <%= new Date(bug.mtime) %> </td>
+          <td> <%= bug.desc %> </td>
+          <td> <button type='button' class='btn btn-info' <%= 'onclick=resolve("' + bug._id + '")'%> > Resolve </button> </td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
+</div>
+
+<a href='/bugs/all' class='btn btn-info'> See all reported bugs </a>
+
+<script type='text/javascript' src='/js/bugs/bug.js'></script>
