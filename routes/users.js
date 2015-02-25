@@ -88,7 +88,7 @@ module.exports = function(app,passport){
             }
           });
         } else {
-          req.flash('message', 'The student code ' + user.code + '" is already in use!');
+          req.flash('message', 'The student code "' + user.code + '" is already in use!');
           return res.redirect('/users/signup');
         }
       });

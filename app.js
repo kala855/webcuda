@@ -38,17 +38,17 @@ passport.use(new LocalStrategy({
     process.nextTick(function () {
       User.find( {code : username}, function(err, user) {
         if (err) { return done(err); }
-        if (!user || user.length == 0) { return done(null, false, { message: 'Usuario desconocido : ' + username }); }
+        if (!user || user.length == 0) { return done(null, false, { message: 'Unknown user : ' + username }); }
         user = user[0];
         bcrypt.compare(password, user.password, function (err, res) {
           if (err)
-            return done(null, false, {message : 'Contraseña inválida.'}); // Dot is to differentiate it from other messages.
+            return done(null, false, {message : 'Wrong password.'}); // Dot is to differentiate it from other messages.
 
           if (res == false)
-            return done(null, false, { message: 'Contraseña inválida' });
+            return done(null, false, { message: 'Wrong password' });
 
           if (!user.activated)
-            return done(null, false, { message: 'Usuario no activado' });
+            return done(null, false, { message: 'This user has not been activated' });
           return done(null, user);
         });
       })

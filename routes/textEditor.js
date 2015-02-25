@@ -28,7 +28,7 @@ module.exports = function(app,passport){
       if(response.err) return;
 
       var code = './codes/' + req.user.code,
-          file = code + '.cc';
+          file = code + '.cu';
       try {
         fs.writeFileSync(file,source);
       } catch (e) {
@@ -40,7 +40,7 @@ module.exports = function(app,passport){
         return;
       }
 
-      var comp = 'g++ ' + file + ' -Wall -O2 -o ' + code;
+      var comp = 'nvcc ' + file + ' -o ' + code;
       var child = exec(comp, function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
