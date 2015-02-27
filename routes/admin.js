@@ -1,6 +1,7 @@
 var User  = require('../models/user'),
     Codes = require('../models/code'),
-    utils = require('./utils.js');
+    utils = require('./utils.js'),
+    fs    = require('fs');
 
 
 module.exports = function(app,passport){
@@ -13,6 +14,22 @@ module.exports = function(app,passport){
           res.render('admin/users', {data : data, user : req.user});
       }); //User.find
     }); //app.get('/')
+
+    app.get('/uploads', utils.isAdmin,function(req,res){
+      res.render('admin/uploads', {user: req.user});
+    });
+
+
+    //deprecated
+    app.post('/uploads', utils.isAdminAPI, function(req,res){
+      console.log(req);
+      fs.readFile(req.files.upload.path, function (err, data) {
+        var newPath ='./uploads/' + req.upload.name;
+        fs.writeFile(newPath, data, function (err) {
+          res.redirect('back');
+        });
+      });
+    });
 
     app.post('/activate', utils.isAdminAPI, function(req,res){
       var id = req.param('id');

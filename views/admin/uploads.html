@@ -1,8 +1,13 @@
 <% layout('../layout') -%>
 
-<h2>Uploads</h2>
+<div class= 'container'>
+  <form action="/admin/uploads" method="post" role='form' enctype="multipart/form-data">
+  <h2>Uploads</h2>
+    <div class='form-group'>
+    <label for='file'> File :</label>
+    <input type='file' name='upload' id='file' class='filestyle' data-buttonName='btn-primary' />
+    </div>
 
-<form action="uploads" method="post">
-  <label for='file'> File :</label>
-  <input type='file' name='file' id='file' class='form-control'/>
-</form>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+  </form> 
+</div>
