@@ -22,13 +22,10 @@ module.exports = function(app,passport){
 
     //deprecated
     app.post('/uploads', utils.isAdminAPI, function(req,res){
-      console.log(req);
-      fs.readFile(req.files.upload.path, function (err, data) {
-        var newPath ='./uploads/' + req.upload.name;
-        fs.writeFile(newPath, data, function (err) {
-          res.redirect('back');
-        });
-      });
+      if(done==true){
+        console.log(req.files.originalname);
+        res.end("File uploaded.");
+      }
     });
 
     app.post('/activate', utils.isAdminAPI, function(req,res){
