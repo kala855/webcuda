@@ -1,8 +1,6 @@
 var User  = require('../models/user'),
-    Codes = require('../models/code'),
     utils = require('./utils.js'),
     fs    = require('fs');
-
 
 module.exports = function(app,passport){
   app.namespace('/admin', function (){
@@ -20,12 +18,8 @@ module.exports = function(app,passport){
     });
 
 
-    //deprecated
     app.post('/uploads', utils.isAdminAPI, function(req,res){
-      if(done==true){
-        console.log(req.files.originalname);
-        res.end("File uploaded.");
-      }
+      res.jeson({ ok : true, data : 'File uploaded'});
     });
 
     app.post('/activate', utils.isAdminAPI, function(req,res){
@@ -71,7 +65,7 @@ module.exports = function(app,passport){
       User.destroy({_id : id}, function(err, data){
         if (err)
           res.status(500).json({ok : false, error : err + 'err destroying'});
-        else 
+        else
           res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
       }); //user.destroy
 

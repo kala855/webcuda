@@ -1,11 +1,12 @@
 var LocalStrategy = require('passport-local').Strategy,
+    File          = require('../models/file'),
     User          = require('./models/user'),
     bcrypt        = require('bcrypt'),
     bodyParser    = require('body-parser'),
-    config        = require('./config/' + env),
     cookieParser  = require('cookie-parser'),
     engine        = require('ejs-locals'),
     env           = process.env.NODE_ENV || 'development',
+    config        = require('./config/' + env),
     express       = require('express'),
     favicon       = require('serve-favicon'),
     flash         = require('connect-flash'),
@@ -73,7 +74,11 @@ app.use(multer({ dest: './uploads/',
                  console.log(file.originalname + ' is starting ...');
                },
                onFileUploadComplete: function (file) {
-                 console.log(file.fieldname + ' uploaded to  ' + file.path);
+                 var newfile = {};
+                 newfile.name = originalname;
+                 File.create(newfile, function(err, data) {
+                   console.log(file.fieldname + ' uploaded to  ' + file.path);
+                 });
                }
 }));
 app.use(logger('dev'));
