@@ -14,12 +14,12 @@ module.exports = function(app,passport){
     }); //app.get('/')
 
     app.get('/uploads', utils.isAdmin,function(req,res){
-      res.render('admin/uploads', {user: req.user});
+        res.render('admin/uploads', {user: req.user, data: data});
     });
 
 
     app.post('/uploads', utils.isAdminAPI, function(req,res){
-      res.jeson({ ok : true, data : 'File uploaded'});
+      res.json({ ok : true, data : 'File uploaded'});
     });
 
     app.post('/activate', utils.isAdminAPI, function(req,res){

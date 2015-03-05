@@ -1,5 +1,5 @@
 var LocalStrategy = require('passport-local').Strategy,
-    File          = require('../models/file'),
+    File          = require('./models/file'),
     User          = require('./models/user'),
     bcrypt        = require('bcrypt'),
     bodyParser    = require('body-parser'),
@@ -75,7 +75,7 @@ app.use(multer({ dest: './uploads/',
                },
                onFileUploadComplete: function (file) {
                  var newfile = {};
-                 newfile.name = originalname;
+                 newfile.name = file.originalname;
                  File.create(newfile, function(err, data) {
                    console.log(file.fieldname + ' uploaded to  ' + file.path);
                  });

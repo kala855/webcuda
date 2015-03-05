@@ -1,4 +1,4 @@
-/* GET home page. */
+File  = require('../models/file'),
 
 module.exports = function(app,passport){
   app.get('/', function(req, res) {
@@ -15,11 +15,18 @@ module.exports = function(app,passport){
   });*/
 
   app.get('/downloads',function(req, res) {
-    res.render('downloads', { user : req.user, title : "Downloads"});
+    File.all(function(err,data){
+      if (err) {
+        req.flash('message', 'Database error');
+        return res.redirect('/');
+      }
+      res.render('downloads', { user : req.user, title : "Downloads", data : data});
+    });
   });
 
-  app.post('/downloads', function(req,req) {
+  app.post('/downloads', function(req,res) {
     var file = req.body.file;
-    req.dowload('./uploads/' + file);
+    console.log('./uploads' + file);
+    res.download('./uploads/' + file);
   });
 }
