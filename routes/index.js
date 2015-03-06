@@ -24,8 +24,8 @@ module.exports = function(app,passport){
     });
   });
 
-  app.post('/downloads', function(req,res) {
-    var file = req.body.file;
+  app.get('/downloads/:file', function(req,res) {
+    var file = req.params.file;
     console.log('./uploads' + file);
     res.download('./uploads/' + file);
   });
