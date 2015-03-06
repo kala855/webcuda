@@ -14,7 +14,7 @@ module.exports = function(app,passport){
     }); //app.get('/')
 
     app.get('/uploads', utils.isAdmin,function(req,res){
-        res.render('admin/uploads', {user: req.user, data: data});
+        res.render('admin/uploads', {user: req.user});
     });
 
 

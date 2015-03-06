@@ -1,9 +1,10 @@
 <% layout('layout') -%>
 <div class='container'>
-
+<ul>
   <% data.forEach(function(file) { %>
-  <a href='#' <%= 'onclick=downloads("'+ file.name +'")' %> > <%= file.name %> </a>
+  <li> <a href='#' <%= 'onclick=downloads("'+ file.name +'")' %> > <%= file.name %> </a> </li>
   <% }); %>
+</ul>
 
 </div>
 <script src='/js/uploads/uploads.js'> </script>
