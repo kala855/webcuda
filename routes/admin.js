@@ -1,5 +1,6 @@
 var User  = require('../models/user'),
     utils = require('./utils.js'),
+    File  = require('../models/file'),
     fs    = require('fs');
 
 module.exports = function(app,passport){
@@ -14,12 +15,18 @@ module.exports = function(app,passport){
     }); //app.get('/')
 
     app.get('/uploads', utils.isAdmin,function(req,res){
-        res.render('admin/uploads', {user: req.user});
+      File.all(function(err,data){
+        if (err) {
+          req.flash('message', 'Database error');
+          return res.redirect('/');
+        }
+        res.render('admin/uploads', {user: req.user, data : data});
+      });
     });
 
 
     app.post('/uploads', utils.isAdminAPI, function(req,res){
-      res.json({ ok : true, data : 'File uploaded'});
+        res.json({ ok : true, data : 'File uploaded'});
     });
 
     app.post('/activate', utils.isAdminAPI, function(req,res){
@@ -53,22 +60,21 @@ module.exports = function(app,passport){
 
     app.post('/del/:id',utils.isAdmin,function (req,res) {
       var id = req.param('id');
-
       User.find({_id : id}, function(err,user){
         if(err)
           return res.status(500).json({ok : false, error : 'Database error'});
         user = user[0];
         if(user.role === 'Admin')
           return res.status(500).json({ok : false, error : 'The Admin user can\'t be deleted'});
+        User.destroy({_id : id}, function(err, data){
+          console.log('pass');
+          if (err)
+            return res.status(500).json({ok : false, error : err + 'err destroying'});
+          else
+            return res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
+        }); //user.destroy
+
       }); //user.find(__id)
-
-      User.destroy({_id : id}, function(err, data){
-        if (err)
-          res.status(500).json({ok : false, error : err + 'err destroying'});
-        else
-          res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
-      }); //user.destroy
-
     }); //app.post(/del)
 
   }); // app.namespace('/admin')
