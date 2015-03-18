@@ -21,8 +21,8 @@ module.exports = function(app,passport){
       var source = req.body.source;
       if( source.search(/.*system\(.*/) != -1) {
         response.err = true;
-        response.msg = 'You can\'t call system functions';
-        res.json(response);
+        response.msg += 'You can\'t call system functions';
+        res.send(response.msg);
         return;
       }
       if(response.err) return;
@@ -33,7 +33,7 @@ module.exports = function(app,passport){
         fs.writeFileSync(file,source);
       } catch (e) {
         response.err = true;
-        response.msg = e;
+        response.msg += e;
       }
       if(response.err){
         res.send(response.msg);
@@ -46,8 +46,8 @@ module.exports = function(app,passport){
           console.log('compile error');
           console.log(error);
           response.err = true;
-          response.msg = "Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr;
-          res.json(response);
+          response.msg += "Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr;
+          res.send(response.msg);
           return;
         }
         if(stderr) {
@@ -66,7 +66,7 @@ module.exports = function(app,passport){
           if (error) {
             console.log('run error');
             response.err = true;
-            response.msg = "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
+            response.msg += "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
             res.send(response.msg);
             fs.unlink(code, function (err){
               if(err)
