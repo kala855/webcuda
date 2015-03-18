@@ -1,5 +1,7 @@
 node_modules
 codes/*
 logs/*
+uploads/*
 *.log
 couchdb.std*
+TODO
