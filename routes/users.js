@@ -8,7 +8,7 @@ var User    = require('../models/user'),
 module.exports = function(app,passport){
   app.namespace('/users',function(){
 
-   app.get('/signin', function(req, res) {
+    app.get('/signin', function(req, res) {
       if (!req.isAuthenticated()) {
         var msg = req.flash('error');
         if (msg.length == 0) msg = null;
@@ -22,13 +22,6 @@ module.exports = function(app,passport){
       res.render('users/signup',{user : req.user, message : req.flash('message')});
     });
 
-    app.post('/signin', passport.authenticate('local', {
-      successRedirect : 'aftersignin',
-      failureRedirect : 'signin',
-      successFlash : 'Welcome!',
-      failureFlash : true
-    }));
-
     app.get('/aftersignin', function(req, res) {
       req.flash('message', 'Welcome ' + req.user.name );
       res.redirect('../');
@@ -41,6 +34,21 @@ module.exports = function(app,passport){
         red = '../';
       res.redirect(red);
     });
+
+    app.get('/change', function(req, res) {
+      res.render('users/change', {user : req.user});
+    });
+
+    app.get('/recover', function(req, res) {
+      res.render('users/recover', {user : req.user});
+    });
+
+    app.post('/signin', passport.authenticate('local', {
+      successRedirect : 'aftersignin',
+      failureRedirect : 'signin',
+      successFlash : 'Welcome!',
+      failureFlash : true
+    }));
 
     app.post('/signup', function(req, res) {
       var rounds = (env == 'development') ? 10 : 13;
