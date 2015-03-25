@@ -43,6 +43,42 @@ module.exports = function(app,passport){
       res.render('users/recover', {user : req.user});
     });
 
+    app.post('/change', function(req, res) {
+      var rounds = (env == 'development') ? 10 : 13,
+      user = req.user,
+      npass = req.body.password,
+      cpass = req.body.passwordConfirm;
+
+      if (npass != cpass) {
+        req.flash('message', 'The passwords don\'t match');
+        console.log('no match');
+        return res.redirect('/user/change');
+      } else {
+        if (user.password.length < 8) {
+          req.flash('message', 'Your password is too short');
+          return res.redirect('/users/change');
+        }
+        bcrypt.genSalt(rounds, function (err, salt) {
+          bcrypt.hash(npass , salt, function (err, hash) {
+            user.password = hash;
+
+            crypto.randomBytes(20, function(err, buf) {
+              User.create(user, function(err, data) {
+                if (err)
+                  return res.render('error', {ok : false , error : 'Data base error: ' + err.validate.errors[0].message});
+                else {
+                  req.flash('message', 'Your password was successfully changed');
+                  return res.redirect('/');
+                }
+              });
+            });
+          });
+        });
+      }
+
+
+    });
+
     app.post('/signin', passport.authenticate('local', {
       successRedirect : 'aftersignin',
       failureRedirect : 'signin',
