@@ -11,6 +11,7 @@ var LocalStrategy = require('passport-local').Strategy,
     favicon       = require('serve-favicon'),
     flash         = require('connect-flash'),
     logger        = require('morgan'),
+    mailer        = require('./config/mailer'),
     multer        = require('multer'),
     namespace     = require('express-namespace'),
     passport      = require('passport'),
@@ -18,6 +19,8 @@ var LocalStrategy = require('passport-local').Strategy,
     resourceful   = require('resourceful'),
     session       = require('express-session');
 
+
+mailer.config();
   //var runCode = require('./routes/runCode');
 passport.serializeUser(function(user, done) {
   done(null, user._id);

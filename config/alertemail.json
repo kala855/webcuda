@@ -1,0 +1,7 @@
+{
+  "service": "Gmail",
+  "auth": {
+    "user": "webcuda.noreply@gmail.com",
+    "pass": "plataformawebcuda"
+  }
+}
