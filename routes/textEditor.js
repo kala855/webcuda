@@ -4,6 +4,9 @@ var fs   = require('fs'),
 
 /* GET home page. */
 
+var TIME_LIMIT =  5 * 1000 * 60,
+    MAX_BUFFER = 500 * 1024;
+
 module.exports = function(app,passport){
   app.namespace('/compiler',function(){
     app.get('/textEditor', function(req, res) {
@@ -27,8 +30,8 @@ module.exports = function(app,passport){
       }
       if(response.err) return;
 
-      var code = './codes/' + req.user.code,
-          file = code + '.cu';
+      var ucode = './codes/' + req.user.code,
+          file = ucode + '.cu';
       try {
         fs.writeFileSync(file,source);
       } catch (e) {
@@ -40,14 +43,14 @@ module.exports = function(app,passport){
         return;
       }
 
-      var comp = 'nvcc ' + file + ' -o ' + code;
-      var child = exec(comp, function (error, stdout, stderr) {
+      var comp = 'nvcc ' + file + ' -o ' + ucode;
+      var child = exec(comp, {timeout: TIME_LIMIT}, function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
           console.log(error);
           response.err = true;
           response.msg += "Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr;
-          res.send(response.msg);
+          //res.send(response.msg);
           return;
         }
         if(stderr) {
@@ -61,14 +64,17 @@ module.exports = function(app,passport){
           if(err)
             console.log('error removing executable');
         });
+      });
 
-        var child2 = exec(code, { timeout: 1000 * 60 * 2, killSignal: 'SIGKILL'}, function (error, stdout, stderr) {
+      child.on('exit',function(code){
+        console.log('hola');
+        var child2 = exec(ucode, {timeout: TIME_LIMIT}, function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
             response.err = true;
             response.msg += "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
-            res.send(response.msg);
-            fs.unlink(code, function (err){
+            //res.send(response.msg);
+            fs.unlink(ucode, function (err){
               if(err)
                 console.log('error removing executable');
             });
@@ -78,14 +84,21 @@ module.exports = function(app,passport){
           if(stderr.lenght > 0)
             response.msg += '\n-------------------------\n' + stderr + '\n-------------------------\n';
           response.msg += stdout;
-          res.send(response.msg);
-          fs.unlink(code, function (err){
+          //res.send(response.msg);
+          fs.unlink(ucode, function (err){
             if(err)
               console.log('error removing executable');
           });
         });
+        child2.on('close', function(code, signal){
+          console.log(code);
+          console.log(signal);
+          console.log(response);
+          if(signal === 'SIGTERM')
+            response.msg = 'Your program takes more than five minutes to end or never ends.\nSignal: SIGTERM'
+          res.send(response.msg);
+        });
       });
-
 
     });
 
