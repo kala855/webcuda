@@ -4,7 +4,7 @@ var fs   = require('fs'),
 
 /* GET home page. */
 
-var TIME_LIMIT =  5 * 1000 * 60,
+var TIME_LIMIT =  1 * 1000 * 60,
     MAX_BUFFER = 500 * 1024;
 
 module.exports = function(app,passport){
@@ -43,7 +43,7 @@ module.exports = function(app,passport){
         return;
       }
 
-      var comp = 'nvcc ' + file + ' -o ' + ucode;
+      var comp = 'nvcc ' + file + ' -arch=compute_35 -o ' + ucode;
       var child = exec(comp, {timeout: TIME_LIMIT}, function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
@@ -66,9 +66,8 @@ module.exports = function(app,passport){
         });
       });
 
-      child.on('exit',function(code){
-        console.log('hola');
-        var child2 = exec(ucode, {timeout: TIME_LIMIT}, function (error, stdout, stderr) {
+      child.on('close', function(code, signal){
+        var child2 = exec(ucode, {timeout: TIME_LIMIT, killSignal: "SIGKILL"}, function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
             response.err = true;
@@ -94,8 +93,8 @@ module.exports = function(app,passport){
           console.log(code);
           console.log(signal);
           console.log(response);
-          if(signal === 'SIGTERM')
-            response.msg = 'Your program takes more than five minutes to end or never ends.\nSignal: SIGTERM'
+          if(signal === 'SIGKILL')
+            response.msg = 'Your program takes more than 1 minute to end or never ends.\nSignal: SIGTERM'
           res.send(response.msg);
         });
       });
