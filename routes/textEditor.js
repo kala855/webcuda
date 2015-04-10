@@ -42,8 +42,11 @@ module.exports = function(app,passport){
         res.send(response.msg);
         return;
       }
-
-      var comp = 'nvcc ' + file + ' -arch=compute_35 -o ' + ucode;
+      var flags = ' -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/'
+                + ' -g -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video'
+                + ' -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib'
+                + ' -lopencv_legacy -lopencv_stitching -arch=compute_35',
+          comp  = 'nvcc ' + file + ' -o ' + ucode + flags;
       var child = exec(comp, {timeout: TIME_LIMIT}, function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
@@ -70,6 +73,7 @@ module.exports = function(app,passport){
         var child2 = exec(ucode, {timeout: TIME_LIMIT, killSignal: "SIGKILL"}, function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
+            console.log(error);
             response.err = true;
             response.msg += "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
             //res.send(response.msg);

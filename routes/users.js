@@ -39,7 +39,10 @@ module.exports = function(app,passport){
     });
 
     app.get('/change', function(req, res) {
-      res.render('users/change', {user : req.user, message : req.flash('message')});
+      if(req.isAuthenticated())
+        return res.render('users/change', {user : req.user, message : req.flash('message')});
+      else
+        return res.render('/');
     });
 
     app.get('/recover', function(req, res) {
