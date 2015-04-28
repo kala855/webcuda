@@ -27,3 +27,20 @@ function deleteUser(user) {
     });
   }
 }
+
+function deleteFile(file) {
+  var id = file.value;
+  var r = confirm("are you sure?");
+  if (r == true) {
+    var url = document.URL + '/../delFile/' + id;
+    jQuery.post(url,function(d, textStatus, jqXHR){
+      alert(JSON.stringify(d.data));
+      location.reload();
+    }).fail(function(d, textStatus, jqXHR) {
+      if (d.responseJSON)
+        alert(JSON.stringify(d.responseJSON.error));
+      else
+        alert('Error');
+    });
+  }
+}

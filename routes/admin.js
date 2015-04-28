@@ -66,16 +66,33 @@ module.exports = function(app,passport){
         user = user[0];
         if(user.role === 'Admin')
           return res.status(500).json({ok : false, error : 'The Admin user can\'t be deleted'});
-        User.destroy({_id : id}, function(err, data){
-          console.log('pass');
+        User.destroy( id, function(err, data){
           if (err)
             return res.status(500).json({ok : false, error : err + 'err destroying'});
-          else
-            return res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
+          return res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
         }); //user.destroy
 
       }); //user.find(__id)
     }); //app.post(/del)
+
+    app.post('/delFile/:id', function (req,res) {
+      var id = req.param('id');
+      File.find({_id : id}, function(err, file){
+        if(err)
+          return res.status(500).json({ok : false, error : 'Database error'});
+        var name = file[0].name;
+        File.destroy( id, function(err, data){
+          if (err)
+            return res.status(500).json({ok : false, error : err + 'err destroying'});
+          fs.unlink('./uploads/' + name, function (err){
+            if(err)
+              console.log('error removing executable');
+          });
+          return res.json({'ok' : true, 'data' : 'The file was successfully deleted'});
+        }); //file.destroy
+
+      }); //file.find(__id)
+    }); //app.post(/delFile)
 
   }); // app.namespace('/admin')
 }
