@@ -4,6 +4,9 @@ var fs   = require('fs'),
 
 /* GET home page. */
 
+var TIME_LIMIT =  1 * 1000 * 60,
+    MAX_BUFFER = 500 * 1024;
+
 module.exports = function(app,passport){
   app.namespace('/compiler',function(){
     app.get('/textEditor', function(req, res) {
@@ -21,33 +24,36 @@ module.exports = function(app,passport){
       var source = req.body.source;
       if( source.search(/.*system\(.*/) != -1) {
         response.err = true;
-        response.msg = 'You can\'t call system functions';
-        res.json(response);
+        response.msg += 'You can\'t call system functions';
+        res.send(response.msg);
         return;
       }
       if(response.err) return;
 
-      var code = './codes/' + req.user.code,
-          file = code + '.cc';
+      var ucode = './codes/' + req.user.code,
+          file = ucode + '.cu';
       try {
         fs.writeFileSync(file,source);
       } catch (e) {
         response.err = true;
-        response.msg = e;
+        response.msg += e;
       }
       if(response.err){
         res.send(response.msg);
         return;
       }
-
-      var comp = 'g++ ' + file + ' -Wall -O2 -o ' + code;
-      var child = exec(comp, function (error, stdout, stderr) {
+      var flags = ' -I/usr/local/include/opencv -I/usr/local/include/opencv2 -L/usr/local/lib/'
+                + ' -g -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video'
+                + ' -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib'
+                + ' -lopencv_legacy -lopencv_stitching -arch=compute_35',
+          comp  = 'nvcc ' + file + ' -o ' + ucode + flags;
+      var child = exec(comp, {timeout: TIME_LIMIT}, function (error, stdout, stderr) {
         if (error) {
           console.log('compile error');
           console.log(error);
           response.err = true;
-          response.msg = "Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr;
-          res.json(response);
+          response.msg += "Compile Error\nError code: "+error.code+"\nSignal received run: "+error.signal+"\nError: "+ stderr;
+          //res.send(response.msg);
           return;
         }
         if(stderr) {
@@ -61,14 +67,17 @@ module.exports = function(app,passport){
           if(err)
             console.log('error removing executable');
         });
+      });
 
-        var child2 = exec(code, { timeout: 1000 * 60 * 2, killSignal: 'SIGKILL'}, function (error, stdout, stderr) {
+      child.on('close', function(code, signal){
+        var child2 = exec(ucode, {timeout: TIME_LIMIT, killSignal: "SIGKILL"}, function (error, stdout, stderr) {
           if (error) {
             console.log('run error');
+            console.log(error);
             response.err = true;
-            response.msg = "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
-            res.send(response.msg);
-            fs.unlink(code, function (err){
+            response.msg += "Run time error\nError code: "+error.code+"\nSignal received run: "+error.signal;
+            //res.send(response.msg);
+            fs.unlink(ucode, function (err){
               if(err)
                 console.log('error removing executable');
             });
@@ -78,14 +87,21 @@ module.exports = function(app,passport){
           if(stderr.lenght > 0)
             response.msg += '\n-------------------------\n' + stderr + '\n-------------------------\n';
           response.msg += stdout;
-          res.send(response.msg);
-          fs.unlink(code, function (err){
+          //res.send(response.msg);
+          fs.unlink(ucode, function (err){
             if(err)
               console.log('error removing executable');
           });
         });
+        child2.on('close', function(code, signal){
+          console.log(code);
+          console.log(signal);
+          console.log(response);
+          if(signal === 'SIGKILL')
+            response.msg = 'Your program takes more than 1 minute to end or never ends.\nSignal: SIGTERM'
+          res.send(response.msg);
+        });
       });
-
 
     });
 

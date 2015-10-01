@@ -1,0 +1,44 @@
+<% layout('../layout') -%>
+
+<div class= 'container'>
+  <form action="/admin/uploads" method="post" role='form' enctype="multipart/form-data">
+    <h2>Uploads</h2>
+    <div class='form-group'>
+      <label for='file'> File :</label>
+      <input type='file' name='upload' id='file' class='filestyle' data-buttonName='btn-primary' />
+    </div>
+
+    <button type='submit' class='btn btn-primary'>Submit</button>
+  </form>
+</div>
+
+<div class='container'>
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h1 class="panel-title">All uploads</h1>
+    </div>
+    <div class="panel-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th> Name of file  </th>
+          </tr>
+
+        </thead>
+        <% data.forEach(function(file){ %>
+        <tr>
+          <td> <%= file.name %>  </td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-danger" value=<%= file._id %>  onclick="deleteFile(this);"> Delete </button>
+            </div>
+          </td>
+
+        </tr>
+        <% }) %>
+      </table>
+    </div>
+  </div>
+
+</div>
+<script src="/js/admin/admin.js"> </script>

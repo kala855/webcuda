@@ -1,0 +1,9 @@
+<% layout('layout') -%>
+<div class='container'>
+  <ul>
+    <% data.forEach(function(file) { %>
+    <li> <a href=<%='/downloads/'+ file.name%> > <%= file.name %> </a> </li>
+    <% }); %>
+  </ul>
+
+</div>

@@ -1,7 +1,7 @@
 var User  = require('../models/user'),
-    Codes = require('../models/code'),
-    utils = require('./utils.js');
-
+    utils = require('./utils.js'),
+    File  = require('../models/file'),
+    fs    = require('fs');
 
 module.exports = function(app,passport){
   app.namespace('/admin', function (){
@@ -13,6 +13,21 @@ module.exports = function(app,passport){
           res.render('admin/users', {data : data, user : req.user});
       }); //User.find
     }); //app.get('/')
+
+    app.get('/uploads', utils.isAdmin,function(req,res){
+      File.all(function(err,data){
+        if (err) {
+          req.flash('message', 'Database error');
+          return res.redirect('/');
+        }
+        res.render('admin/uploads', {user: req.user, data : data});
+      });
+    });
+
+
+    app.post('/uploads', utils.isAdminAPI, function(req,res){
+        res.json({ ok : true, data : 'File uploaded'});
+    });
 
     app.post('/activate', utils.isAdminAPI, function(req,res){
       var id = req.param('id');
@@ -45,23 +60,39 @@ module.exports = function(app,passport){
 
     app.post('/del/:id',utils.isAdmin,function (req,res) {
       var id = req.param('id');
-
       User.find({_id : id}, function(err,user){
         if(err)
           return res.status(500).json({ok : false, error : 'Database error'});
         user = user[0];
         if(user.role === 'Admin')
           return res.status(500).json({ok : false, error : 'The Admin user can\'t be deleted'});
+        User.destroy( id, function(err, data){
+          if (err)
+            return res.status(500).json({ok : false, error : err + 'err destroying'});
+          return res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
+        }); //user.destroy
+
       }); //user.find(__id)
-
-      User.destroy({_id : id}, function(err, data){
-        if (err)
-          res.status(500).json({ok : false, error : err + 'err destroying'});
-        else 
-          res.json({'ok' : true, 'data' : 'The user was successfully deleted'});
-      }); //user.destroy
-
     }); //app.post(/del)
+
+    app.post('/delFile/:id', function (req,res) {
+      var id = req.param('id');
+      File.find({_id : id}, function(err, file){
+        if(err)
+          return res.status(500).json({ok : false, error : 'Database error'});
+        var name = file[0].name;
+        File.destroy( id, function(err, data){
+          if (err)
+            return res.status(500).json({ok : false, error : err + 'err destroying'});
+          fs.unlink('./uploads/' + name, function (err){
+            if(err)
+              console.log('error removing executable');
+          });
+          return res.json({'ok' : true, 'data' : 'The file was successfully deleted'});
+        }); //file.destroy
+
+      }); //file.find(__id)
+    }); //app.post(/delFile)
 
   }); // app.namespace('/admin')
 }
